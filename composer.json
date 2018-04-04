@@ -1,0 +1,6 @@
+{
+    "require": {
+        "hhvm/hsl": "^1.4",
+        "hhvm/type-assert": "^3.2"
+    }
+}
