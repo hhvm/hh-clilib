@@ -14,6 +14,7 @@ namespace Facebook\CLILib;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Str, Vec};
 
+<<__ConsistentConstruct>>
 abstract class CLIBase {
   private vec<string> $arguments = vec[];
 
@@ -34,7 +35,7 @@ abstract class CLIBase {
     return $this->arguments;
   }
 
-  protected static function supportsColors(): bool {
+  protected function supportsColors(): bool {
     static $cache;
 
     if ($cache !== null) {
@@ -71,7 +72,7 @@ abstract class CLIBase {
       return true;
     }
 
-    if (static::isInteractive()) {
+    if ($this->isInteractive()) {
       $cache = Str\contains((string) \getenv('TERM'), 'color');
       return $cache;
     }
@@ -80,7 +81,7 @@ abstract class CLIBase {
     return false;
   }
 
-  protected static function isInteractive(): bool {
+  protected function isInteractive(): bool {
     static $cache = null;
     if ($cache !== null) {
       return $cache;
@@ -97,8 +98,7 @@ abstract class CLIBase {
         $cache = true;
         return true;
       }
-      \fwrite(
-        \STDERR,
+      $this->stderr->write(
         "NONINTERACTIVE env var must be 0/1/yes/no/true/false, or unset.\n",
       );
     }
@@ -121,14 +121,41 @@ abstract class CLIBase {
     return false;
   }
 
+  final protected function getStdout(): OutputInterface {
+    return $this->stdout;
+  }
+
+  final protected function getStderr(): OutputInterface {
+    return $this->stderr;
+  }
+
+  final public static function main(): noreturn {
+    try {
+      $responder = new static(
+        vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
+        new FileHandleOutput(\STDOUT),
+        new FileHandleOutput(\STDERR),
+      );
+      \HH\Asio\join($responder->mainAsync());
+    } catch (ExitException $e) {
+      exit($e->getCode());
+    } catch (CLIException $e) {
+      \fwrite(\STDERR, $e->getMessage()."\n");
+      exit(1);
+    }
+    exit(0);
+  }
+
   public function __construct(
     private vec<string> $argv,
+    private OutputInterface $stdout,
+    private OutputInterface $stderr,
   ) {
     // Ignore process name in $argv[0]
     $argv = Vec\drop($argv, 1);
 
     if (C\contains($argv, '--help') || C\contains($argv, '-h')) {
-      $this->displayHelp(\STDOUT);
+      $this->displayHelp($stdout);
       throw new ExitException(0);
     }
 
@@ -206,7 +233,7 @@ abstract class CLIBase {
     );
   }
 
-  public function displayHelp(resource $file): void {
+  public function displayHelp(OutputInterface $out): void {
     $usage = 'Usage: '.C\firstx($this->argv);
 
     $opts = $this->getSupportedOptions();
@@ -226,12 +253,13 @@ abstract class CLIBase {
       $class = TypeAssert\classname_of(CLIWithArguments::class, static::class);
       $usage .= ' ['.$class::getHelpTextForOptionalArguments().' ...]';
     }
-    \fprintf($file, "%s\n", $usage);
+
+    $out->write($usage."\n");
     if (C\is_empty($opts)) {
       return;
     }
 
-    \fprintf($file, "\nOptions:\n");
+    $out->write("\nOptions:\n");
     foreach ($opts as $opt) {
       $short = $opt->getShort();
       $long = $opt->getLong();
@@ -243,12 +271,11 @@ abstract class CLIBase {
       }
 
       if ($short !== null) {
-        \fprintf($file, "  -%s, --%s\n", $short, $long);
+        $out->write(Str\format("  -%s, --%s\n", $short, $long));
       } else {
-        \fprintf($file, "  --%s\n", $long);
+        $out->write(Str\format("  --%s\n", $long));
       }
-      \fwrite(
-        $file,
+      $out->write(
         $opt->getHelpText()
         |> \explode("\n", $$)
         |> Vec\map(
@@ -258,7 +285,7 @@ abstract class CLIBase {
         |> \implode('', $$),
       );
     }
-    \fwrite($file, "  -h, --help\n");
-    \fwrite($file, "\tdisplay this text and exit\n");
+    $out->write("  -h, --help\n");
+    $out->write("\tdisplay this text and exit\n");
   }
 }
