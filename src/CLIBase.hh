@@ -219,13 +219,26 @@ abstract class CLIBase {
     }
 
     $arguments = Vec\concat($arguments, $argv);
+
     if (C\is_empty($arguments)) {
+      if ($this instanceof CLIWithRequiredArguments) {
+        $class = TypeAssert\classname_of(
+          CLIWithRequiredArguments::class,
+          static::class,
+        );
+        throw new InvalidArgumentException(
+          "%s must be specified.",
+          Str\join($class::getHelpTextForRequiredArguments(), ' '),
+        );
+      }
       return;
     }
+
     if (($_ = $this) instanceof CLIWithArguments) {
       $this->arguments = $arguments;
       return;
     }
+
     throw new InvalidArgumentException(
       "Non-option arguments are not supported; first argument is '%s'",
       C\firstx($arguments),
