@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d209a6e4767b403f4f279bb1159a4e48",
+    "content-hash": "8e866ba9455a88e9303d5a81286141b8",
     "packages": [
         {
             "name": "fredemmott/hack-error-suppressor",
