@@ -11,11 +11,12 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
-final class CLIOptionFlag extends CLIOption {
-  const type TSetter = (function():void);
+use namespace HH\Lib\{C, Vec};
 
+final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue {
   public function __construct(
-    private self::TSetter $setter,
+    private enumname<T> $enumname,
+    private (function(T): void) $setter,
     string $help_text,
     string $long,
     ?string $short,
@@ -23,27 +24,9 @@ final class CLIOptionFlag extends CLIOption {
     parent::__construct($help_text, $long, $short);
   }
 
-  public function set(): void {
+  protected function set(string $value): void {
+    $enum = $this->enumname;
     $setter = $this->setter;
-    $setter();
-  }
-
-  <<__Override>>
-  public function apply(
-    string $as_given,
-    ?string $value,
-    vec<string> $argv,
-  ): vec<string> {
-    if ($value !== null) {
-      \fprintf(
-        \STDERR,
-        "'%s' specifies a value, however values aren't supported for that ".
-        "option.\n",
-        $as_given,
-      );
-      exit(1);
-    }
-    $this->set();
-    return $argv;
+    $setter($enum::assert($value));
   }
 }

@@ -20,11 +20,21 @@ function flag(
   return new CLIOptionFlag($setter, $help_text, $long, $short);
 }
 
-function with_required_value<Tignored>(
+function with_required_string(
   (function(string):void) $setter,
   string $help_text,
   string $long,
   ?string $short = null,
 ): CLIOption {
-  return new CLIOptionWithRequiredValue($setter, $help_text, $long, $short);
+  return new CLIOptionWithRequiredStringValue($setter, $help_text, $long, $short);
+}
+
+function with_required_enum<T>(
+  enumname<T> $enum,
+  (function(T):void) $setter,
+  string $help_text,
+  string $long,
+  ?string $short = null,
+): CLIOption {
+  return new CLIOptionWithRequiredEnumValue($enum, $setter, $help_text, $long, $short);
 }
