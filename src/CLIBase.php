@@ -8,7 +8,7 @@
  *
  */
 
-namespace Facebook\HHAST\__Private;
+namespace Facebook\CLILib;
 
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Str, Vec};

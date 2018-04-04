@@ -8,7 +8,7 @@
  *
  */
 
-namespace Facebook\HHAST\__Private;
+namespace Facebook\CLILib;
 
 abstract class CLIWithArguments extends CLIBase {
   public static function getHelpTextForOptionalArguments(): string {
