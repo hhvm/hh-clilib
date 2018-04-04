@@ -9,7 +9,7 @@
  * directory.
  */
 
-namespace Facebook\HHAST\__Private;
+namespace Facebook\CLILib;
 use namespace HH\Lib\C;
 
 abstract class CLIWithRequiredArguments extends CLIWithArguments {

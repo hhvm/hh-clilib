@@ -9,7 +9,7 @@
  * directory.
  */
 
-namespace Facebook\HHAST\__Private\CLIOptions;
+namespace Facebook\CLILib\CLIOptions;
 
 final class CLIOptionFlag extends CLIOption {
   const type TSetter = (function():void);

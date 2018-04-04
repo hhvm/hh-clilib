@@ -9,7 +9,7 @@
  * directory.
  */
 
-namespace Facebook\HHAST\__Private\CLIOptions;
+namespace Facebook\CLILib\CLIOptions;
 
 function flag(
   (function():void) $setter,
