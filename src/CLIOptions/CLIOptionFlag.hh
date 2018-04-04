@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /**
  * Copyright (c) 2017, Facebook, Inc.
  * All rights reserved.
@@ -11,10 +11,10 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
-use namespace HH\Lib\{C, Vec};
+use type Facebook\CLILib\InvalidArgumentException;
 
-final class CLIOptionWithRequiredStringValue extends CLIOptionWithRequiredValue {
-  const type TSetter = (function(string):void);
+final class CLIOptionFlag extends CLIOption {
+  const type TSetter = (function():void);
 
   public function __construct(
     private self::TSetter $setter,
@@ -25,8 +25,25 @@ final class CLIOptionWithRequiredStringValue extends CLIOptionWithRequiredValue 
     parent::__construct($help_text, $long, $short);
   }
 
-  protected function set(string $value): void {
+  public function set(): void {
     $setter = $this->setter;
-    $setter($value);
+    $setter();
+  }
+
+  <<__Override>>
+  public function apply(
+    string $as_given,
+    ?string $value,
+    vec<string> $argv,
+  ): vec<string> {
+    if ($value !== null) {
+      throw new InvalidArgumentException(
+        "'%s' specifies a value, however values aren't supported for that ".
+        "option",
+        $as_given,
+      );
+    }
+    $this->set();
+    return $argv;
   }
 }

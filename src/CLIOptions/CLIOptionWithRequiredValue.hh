@@ -11,12 +11,13 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
+use type Facebook\CLILib\InvalidArgumentException;
 use namespace HH\Lib\{C, Vec};
 
 abstract class CLIOptionWithRequiredValue extends CLIOption {
   const type TSetter = (function(string):void);
 
-  abstract protected function set(string $value): void;
+  abstract protected function set(string $as_given, string $value): void;
 
   <<__Override>>
   public function apply(
@@ -26,17 +27,15 @@ abstract class CLIOptionWithRequiredValue extends CLIOption {
   ): vec<string> {
     if ($value === null) {
       if (C\is_empty($argv)) {
-        \fprintf(
-          \STDERR,
-          "option '%s' requires a value\n",
+        throw new InvalidArgumentException(
+          "option '%s' requires a value",
           $as_given,
         );
-        exit(1);
       }
       $value = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
     }
-    $this->set($value);
+    $this->set($as_given, $value);
     return $argv;
   }
 }

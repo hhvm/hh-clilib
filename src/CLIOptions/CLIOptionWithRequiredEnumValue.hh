@@ -11,7 +11,8 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
-use namespace HH\Lib\{C, Vec};
+use type Facebook\CLILib\InvalidArgumentException;
+use namespace HH\Lib\{C, Str, Vec};
 
 final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue {
   public function __construct(
@@ -24,8 +25,18 @@ final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue
     parent::__construct($help_text, $long, $short);
   }
 
-  protected function set(string $value): void {
+  protected function set(string $as_given, string $value): void {
     $enum = $this->enumname;
+    if (!$enum::isValid($value)) {
+      throw new InvalidArgumentException(
+        "'%s' is not a valid value for '%s' - valid values are: %s",
+        $value,
+        $as_given,
+        $enum::getValues()
+          |> Vec\map($$, $v ==> (string) $v)
+          |> Str\join($$, ' | '),
+      );
+    }
     $setter = $this->setter;
     $setter($enum::assert($value));
   }

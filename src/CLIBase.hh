@@ -129,7 +129,7 @@ abstract class CLIBase {
 
     if (C\contains($argv, '--help') || C\contains($argv, '-h')) {
       $this->displayHelp(\STDOUT);
-      exit(0);
+      throw new ExitException(0);
     }
 
     $not_options = vec[];
@@ -183,9 +183,10 @@ abstract class CLIBase {
       }
 
       if (!C\contains_key($opts, $opt)) {
-        \fprintf(\STDERR, "Unrecognized option: %s\n", $arg);
-        $this->displayHelp(\STDERR);
-        exit(1);
+        throw new InvalidArgumentException(
+          "Unrecognized option: %s",
+          $arg,
+        );
       }
       $opt = $opts[$opt];
       $argv = $opt->apply($arg, $value, $argv);
@@ -199,12 +200,10 @@ abstract class CLIBase {
       $this->arguments = $arguments;
       return;
     }
-    \fprintf(
-      \STDERR,
-      "Non-option arguments are not supported; first argument is '%s'\n",
+    throw new InvalidArgumentException(
+      "Non-option arguments are not supported; first argument is '%s'",
       C\firstx($arguments),
     );
-    exit(1);
   }
 
   public function displayHelp(resource $file): void {
