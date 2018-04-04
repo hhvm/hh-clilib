@@ -135,14 +135,14 @@ abstract class CLIBase {
         new FileHandleOutput(\STDOUT),
         new FileHandleOutput(\STDERR),
       );
-      \HH\Asio\join($responder->mainAsync());
+      $exit_code = \HH\Asio\join($responder->mainAsync());
+      exit($exit_code);
     } catch (ExitException $e) {
       exit($e->getCode());
     } catch (CLIException $e) {
       \fwrite(\STDERR, $e->getMessage()."\n");
       exit(1);
     }
-    exit(0);
   }
 
   public function __construct(
