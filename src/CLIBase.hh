@@ -14,19 +14,86 @@ namespace Facebook\CLILib;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Str, Vec};
 
+/**
+ * This class contains all of the core functionality for using the Hack CLI
+ * library. It will never be instantiated directly, but instead, will invoked
+ * through a call to its `main` function.
+ *
+ * All non-abstract types extending this class (or any of its children), will
+ * implement the definition of the abstract function `mainAsync`, which is
+ * called by the `main` function. `mainAsync` will provide all the custom
+ * execution when your CLI commands are invoked.
+ *
+ * ```Hack
+ * final class MyCLI extends CLIBase {
+ *   <<__Override>>
+ *   public async function mainAsync(): Awaitable<int> {
+ *     // Custom CLI handling
+ *   }
+ * }
+ * MyCLI::main(); // calls the main function of CLIBase
+ * ```
+ */
 <<__ConsistentConstruct>>
 abstract class CLIBase {
   private vec<string> $arguments = vec[];
 
+  /**
+   * Returns a vector of options that is supported by the CLI.
+   */
   abstract protected function getSupportedOptions(
   ): vec<CLIOptions\CLIOption>;
 
+  /**
+   * This is implemented by all implementations of the Hack CLI and provides
+   * all of the custom execution that will occur when that CLI is invoked.
+   *
+   * @returns: An integer representin an exit code of success of failure
+   */
   abstract public function mainAsync(): Awaitable<int>;
 
+  /**
+   * Returns a vector of he arguments that were passed to the CLI after
+   * all of the options have been parsed.
+   *
+   * In the following example:
+   *
+   * ```
+   * hhvm bin/hh-apidoc -o /tmp ../hh-clilib
+   * ```
+   *
+   * the vector returned would be:
+   *
+   * ```
+   * vec(1) {
+   *  string(18) "../hh-clilib/"
+   * }
+   * ```
+   */
   final public function getArgv(): vec<string> {
     return $this->argv;
   }
 
+  /**
+   * Returns a vector of all the arguments that were passed in any given use
+   * of the CLI, including the process, flags, options and other arguments.
+   * In the following example:
+   *
+   * ```
+   * hhvm bin/hh-apidoc -o /tmp ../hh-clilib
+   * ```
+   *
+   * the vector returned would be:
+   *
+   * ```
+   * vec(4) {
+   *   string(13) "bin/hh-apidoc"
+   *   string(2) "-o"
+   *   string(4) "/tmp"
+   *   string(18) "../hh-clilib"
+   * }
+   * ```
+   */
   final protected function getArguments(): vec<string> {
     invariant(
       ($_ = $this) instanceof CLIWithArguments,
@@ -35,6 +102,9 @@ abstract class CLIBase {
     return $this->arguments;
   }
 
+  /**
+   * Determines whether your the current cli supports colors.
+   */
   protected function supportsColors(): bool {
     static $cache;
 
@@ -81,6 +151,9 @@ abstract class CLIBase {
     return false;
   }
 
+  /**
+   * Determines whether the current cli has and is interactive mode
+   */
   protected function isInteractive(): bool {
     static $cache = null;
     if ($cache !== null) {
@@ -121,14 +194,33 @@ abstract class CLIBase {
     return false;
   }
 
+  /**
+   * Gets the standard outputfor the current CLI. By default, this is `STDOUT`.
+   *
+   * @returns: an `OutputInterface` that supports how output is written.
+   */
   final protected function getStdout(): OutputInterface {
     return $this->stdout;
   }
 
+  /**
+   * Gets the standard error for the current CLI. By default, this is `STDERR`.
+   *
+   * @returns: an `OutputInterface` that supports how errors are written.
+   */
   final protected function getStderr(): OutputInterface {
     return $this->stderr;
   }
 
+  /**
+   * This is usually the first call to create an instance of a Hack CLI. By
+   * default, the output is to `STDOUT` and errors are written to `STDERR`. But
+   * those can be overriden by the actual concrete instance of this abstract
+   * class.
+   *
+   * @returns: `noreturn`. Instead `exit()` is called with an exit code for
+   * success and failure.
+   */
   final public static function main(): noreturn {
     try {
       $responder = new static(
@@ -146,6 +238,11 @@ abstract class CLIBase {
     }
   }
 
+  /**
+   * This creates a new instance of the Hack CLI. This will generally be called
+   * indirectly via a call to `main()`. However, a direct call to this
+   * constructor may be useful in certain cases, such as mocks and unit tests.
+   */
   public function __construct(
     private vec<string> $argv,
     private OutputInterface $stdout,
@@ -246,6 +343,9 @@ abstract class CLIBase {
     );
   }
 
+  /**
+   *
+   */
   public function displayHelp(OutputInterface $out): void {
     $usage = 'Usage: '.C\firstx($this->argv);
 
