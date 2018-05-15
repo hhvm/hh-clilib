@@ -19,18 +19,31 @@ use namespace HH\Lib\{C, Dict, Str, Vec};
  * library. It will never be instantiated directly, but instead, will invoked
  * through a call to its `main` function.
  *
+ * The Hack CLI has the notion of options and arguments.
+ *
+ * options: An instance of the Hack CLI has a limited set of options that can be
+ * used to customize the experience of its execution. For example, many CLIs
+ * will have a `--help` option that can be passed to it.
+ *
+ * arguments: These are passed to the CLI after all the options are provided.
+ * In general, the arguments are what is being executed upon.
+ *
  * All non-abstract types extending this class (or any of its children), will
  * implement the definition of the abstract function `mainAsync`, which is
  * called by the `main` function. `mainAsync` will provide all the custom
  * execution when your CLI commands are invoked.
  *
  * ```Hack
+ * // MyCLI.hh
+ * <?hh // strict
  * final class MyCLI extends CLIBase {
  *   <<__Override>>
  *   public async function mainAsync(): Awaitable<int> {
  *     // Custom CLI handling
  *   }
  * }
+ *
+ * // RunMyCLI.hh
  * MyCLI::main(); // calls the main function of CLIBase
  * ```
  */
@@ -39,7 +52,7 @@ abstract class CLIBase {
   private vec<string> $arguments = vec[];
 
   /**
-   * Returns a vector of options that is supported by the CLI.
+   * Returns a `vec` of options that is supported by the CLI.
    */
   abstract protected function getSupportedOptions(
   ): vec<CLIOptions\CLIOption>;
@@ -48,12 +61,12 @@ abstract class CLIBase {
    * This is implemented by all implementations of the Hack CLI and provides
    * all of the custom execution that will occur when that CLI is invoked.
    *
-   * @returns: An integer representin an exit code of success of failure
+   * @returns: An integer representing an exit code of success or failure
    */
   abstract public function mainAsync(): Awaitable<int>;
 
   /**
-   * Returns a vector of he arguments that were passed to the CLI after
+   * Returns a `vec` of the arguments that were passed to the CLI after
    * all of the options have been parsed.
    *
    * In the following example:
@@ -62,11 +75,14 @@ abstract class CLIBase {
    * hhvm bin/hh-apidoc -o /tmp ../hh-clilib
    * ```
    *
-   * the vector returned would be:
+   * the `vec` returned would be:
    *
    * ```
-   * vec(1) {
-   *  string(18) "../hh-clilib/"
+   * vec(4) {
+   *   string(13) "bin/hh-apidoc"
+   *   string(2) "-o"
+   *   string(4) "/tmp"
+   *   string(18) "../hh-clilib"
    * }
    * ```
    */
@@ -75,7 +91,7 @@ abstract class CLIBase {
   }
 
   /**
-   * Returns a vector of all the arguments that were passed in any given use
+   * Returns a `vec` of all the arguments that were passed in any given use
    * of the CLI, including the process, flags, options and other arguments.
    * In the following example:
    *
@@ -83,14 +99,11 @@ abstract class CLIBase {
    * hhvm bin/hh-apidoc -o /tmp ../hh-clilib
    * ```
    *
-   * the vector returned would be:
+   * the `vec` returned would be:
    *
    * ```
-   * vec(4) {
-   *   string(13) "bin/hh-apidoc"
-   *   string(2) "-o"
-   *   string(4) "/tmp"
-   *   string(18) "../hh-clilib"
+   * vec(1) {
+   *  string(18) "../hh-clilib/"
    * }
    * ```
    */
@@ -103,7 +116,10 @@ abstract class CLIBase {
   }
 
   /**
-   * Determines whether your the current cli supports colors.
+   * Determines whether your current terminal supports colors.
+   *
+   * This function will automatically return `true` in some cases, such as
+   * non-interactive contexts provided in continuous integration (CI) systems.
    */
   protected function supportsColors(): bool {
     static $cache;
@@ -152,7 +168,9 @@ abstract class CLIBase {
   }
 
   /**
-   * Determines whether the current cli has and is interactive mode
+   * Determines whether the current terminal is in interactive mode.
+   *
+   * In general, this tells you if you are on `stdin` or are you piping data.
    */
   protected function isInteractive(): bool {
     static $cache = null;
@@ -195,18 +213,17 @@ abstract class CLIBase {
   }
 
   /**
-   * Gets the standard outputfor the current CLI. By default, this is `STDOUT`.
-   *
-   * @returns: an `OutputInterface` that supports how output is written.
+   * Gets the standard output for the current CLI. By default, this is `STDOUT`.
    */
   final protected function getStdout(): OutputInterface {
     return $this->stdout;
   }
 
   /**
-   * Gets the standard error for the current CLI. By default, this is `STDERR`.
+   * Gets the standard error for the current CLI.
    *
-   * @returns: an `OutputInterface` that supports how errors are written.
+   * This is usually a wrapper around `STDOUT`, and should be used instead of
+   * direct resource access. e.g., `STDERR`.
    */
   final protected function getStderr(): OutputInterface {
     return $this->stderr;
@@ -218,8 +235,8 @@ abstract class CLIBase {
    * those can be overriden by the actual concrete instance of this abstract
    * class.
    *
-   * @returns: `noreturn`. Instead `exit()` is called with an exit code for
-   * success and failure.
+   * This function does not return anything. Instead `exit()` is called with an
+   * exit code for success and failure.
    */
   final public static function main(): noreturn {
     try {
@@ -239,9 +256,11 @@ abstract class CLIBase {
   }
 
   /**
-   * This creates a new instance of the Hack CLI. This will generally be called
-   * indirectly via a call to `main()`. However, a direct call to this
-   * constructor may be useful in certain cases, such as mocks and unit tests.
+   * This creates a new instance of the Hack CLI.
+   *
+   * This will generally be called indirectly via a call to `main()`. However,
+   * a direct call to this constructor may be useful in certain cases, such as
+   * mocks and unit tests.
    */
   public function __construct(
     private vec<string> $argv,
@@ -344,7 +363,7 @@ abstract class CLIBase {
   }
 
   /**
-   *
+   * Displays the help and usage information for this cli.
    */
   public function displayHelp(OutputInterface $out): void {
     $usage = 'Usage: '.C\firstx($this->argv);
