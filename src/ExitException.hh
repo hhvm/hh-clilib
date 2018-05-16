@@ -12,15 +12,21 @@
 namespace Facebook\CLILib;
 
 /**
- * An `Exception` used when running of the CLI resulted in something other than
- * success.
+ * An `Exception` used when you want to explicitly exit the running of the CLI
+ * process and provide a specific exit code.
+ *
+ * This exception would be thrown before somnething like `exit()` is called.
+ * The exit code provided to the exception can be used in the `exit()` call.
  *
  * @see CLIException
  */
 final class ExitException extends CLIException {
   /**
-   * This exception is created via an exit code, that is usually non-zero, as
-   * zero genreally represents success.
+   * Create the exception with the exit code.
+   *
+   * Note that success via `new ExitException(0)` is valid usage. For example,
+   * you may throw this exception if you are jumping out of the CLI process
+   * because you specified a certain flag (e.g., `--help`).
    */
   public function __construct(
     int $code,
