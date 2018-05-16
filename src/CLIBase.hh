@@ -56,7 +56,7 @@ abstract class CLIBase {
   private vec<string> $arguments = vec[];
 
   /**
-   * Returns a `vec` of options that is supported by the CLI.
+   * Returns the list of options that is supported by the CLI.
    */
   abstract protected function getSupportedOptions(
   ): vec<CLIOptions\CLIOption>;
@@ -65,13 +65,13 @@ abstract class CLIBase {
    * This is implemented by all implementations of the Hack CLI and provides
    * all of the custom execution that will occur when that CLI is invoked.
    *
-   * @returns: An integer representing an exit code for the process. 0 is the
+   * @return  An integer representing an exit code for the process. 0 is the
    * standard for success.
    */
   abstract public function mainAsync(): Awaitable<int>;
 
   /**
-   * Returns a `vec` of all the arguments that were passed in any given use
+   * Returns the list of all the arguments that were passed in any given use
    * of the CLI, including the process, flags, options and other arguments.
    *
    * In the following example:
@@ -96,7 +96,7 @@ abstract class CLIBase {
   }
 
   /**
-   * Returns a `vec` of the arguments that were passed to the CLI after
+   * Returns the list of the arguments that were passed to the CLI after
    * all of the options have been parsed.
    *
    * In the following example:
@@ -177,7 +177,7 @@ abstract class CLIBase {
   /**
    * Determines whether the current terminal is in interactive mode.
    *
-   * In general, this tells the yser if the user is directly typing into stdin.
+   * In general, this is `true` if the user is directly typing into stdin.
    */
   protected function isInteractive(): bool {
     static $cache = null;
@@ -234,20 +234,22 @@ abstract class CLIBase {
    * By default, this is the process standard error, or file descriptor 2.
    *
    * This is usually a wrapper around stdout, and should be used instead of
-   * direct resource access.
+   * direct access.
    */
   final protected function getStderr(): OutputInterface {
     return $this->stderr;
   }
 
   /**
-   * This is usually the first call to create an instance of a Hack CLI. By
-   * default, the output is to stdout and errors are written to stderr. But
+   * This is usually the main entry point to create an instance of a Hack CLI.
+   * By default, the output is to stdout and errors are written to stderr. But
    * those can be overriden by the actual concrete instance of this abstract
    * class.
    *
    * This function does not return anything. Instead `exit()` is called with an
    * exit code for success and failure.
+   *
+   * @see CLIBase::mainAsync
    */
   final public static function main(): noreturn {
     try {
@@ -374,7 +376,10 @@ abstract class CLIBase {
   }
 
   /**
-   * Displays the help and usage information for this cli.
+   * Displays the help and usage information for this CLI.
+   *
+   * The help information is automatically generated. The default generation
+   * can be overridden - but generally not necessary.
    */
   public function displayHelp(OutputInterface $out): void {
     $usage = 'Usage: '.C\firstx($this->argv);
