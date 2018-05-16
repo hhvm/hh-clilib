@@ -23,6 +23,9 @@ final class FileHandleOutput implements OutputInterface {
    * Construct a FileHandleOutput by passing a file resource.
    *
    * `\STDOUT` and `\STDERR` are resources for stdin and stderr
+   *
+   * This API is currently unstable. It will change when our currently
+   * experimental `FileSystem` API becomes part of the Hack Standard Library.
    */
   public function __construct(
     private resource $f,
