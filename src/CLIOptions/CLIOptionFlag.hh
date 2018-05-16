@@ -56,17 +56,6 @@ final class CLIOptionFlag extends CLIOption {
     $setter();
   }
 
-  /**
-   * Process user input, return new argv.
-   *
-   * @param $as_given - the option as specified by the user. Usually matches
-   *   `getShort()` or `getLong()`
-   * @param $value - value specified by the users (e.g. `--long=value`). If
-   *   null, it may be appropriate to take a value from $argv
-   * @param $argv - remaining unprocessed $argv
-   *
-   * @return the new $argv after this option is applied.
-   */
   <<__Override>>
   public function apply(
     string $as_given,
