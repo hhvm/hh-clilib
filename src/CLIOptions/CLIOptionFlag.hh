@@ -18,9 +18,9 @@ use type Facebook\CLILib\InvalidArgumentException;
  *
  * A flag has no associated required values associated with it.
  *
- * A wrapper for this class is provided in `CLIOptions`.
+ * A wrapper for this class is provided in the
+ * `Facebook\CLILib\CLIOptions\flag()` function.
  *
- * @see CLIOptions
  */
 final class CLIOptionFlag extends CLIOption {
   const type TSetter = (function():void);
@@ -65,6 +65,8 @@ final class CLIOptionFlag extends CLIOption {
    * @param $value - value specified by the users (e.g. `--long=value`). If
    *   null, it may be appropriate to take a value from $argv
    * @param $argv - remaining unprocessed $argv
+   *
+   * @return the new $argv after this option is applied.
    */
   <<__Override>>
   public function apply(
