@@ -23,7 +23,8 @@ use namespace HH\Lib\{C, Dict, Str, Vec};
  *
  * options: An instance of the Hack CLI has a limited set of options that can be
  * used to customize the experience of its execution. For example, many CLIs
- * will have a `--help` option that can be passed to it.
+ * will have a `--help` option that can be passed to it. In the case of th Hack
+ * CLI, `--help` does not even need to be explictly specified; it always exists.
  *
  * arguments: These are passed to the CLI after all the options are provided.
  * In general, the arguments are what is being executed upon.
@@ -42,7 +43,10 @@ use namespace HH\Lib\{C, Dict, Str, Vec};
  *     // Custom CLI handling
  *   }
  * }
+ * ```
  *
+ * ```Hack
+ * <?hh // not strict because of top-level statements.
  * // RunMyCLI.hh
  * MyCLI::main(); // calls the main function of CLIBase
  * ```
@@ -61,13 +65,14 @@ abstract class CLIBase {
    * This is implemented by all implementations of the Hack CLI and provides
    * all of the custom execution that will occur when that CLI is invoked.
    *
-   * @returns: An integer representing an exit code of success or failure
+   * @returns: An integer representing an exit code for the process. 0 is the
+   * standard for success.
    */
   abstract public function mainAsync(): Awaitable<int>;
 
   /**
-   * Returns a `vec` of the arguments that were passed to the CLI after
-   * all of the options have been parsed.
+   * Returns a `vec` of all the arguments that were passed in any given use
+   * of the CLI, including the process, flags, options and other arguments.
    *
    * In the following example:
    *
@@ -91,8 +96,9 @@ abstract class CLIBase {
   }
 
   /**
-   * Returns a `vec` of all the arguments that were passed in any given use
-   * of the CLI, including the process, flags, options and other arguments.
+   * Returns a `vec` of the arguments that were passed to the CLI after
+   * all of the options have been parsed.
+   *
    * In the following example:
    *
    * ```
@@ -118,8 +124,9 @@ abstract class CLIBase {
   /**
    * Determines whether your current terminal supports colors.
    *
-   * This function will automatically return `true` in some cases, such as
-   * non-interactive contexts provided in continuous integration (CI) systems.
+   * This function will automatically return `true` in some non-interactive
+   * cases, such as non-interactive contexts provided in continuous integration
+   * (CI) systems.
    */
   protected function supportsColors(): bool {
     static $cache;
@@ -170,7 +177,7 @@ abstract class CLIBase {
   /**
    * Determines whether the current terminal is in interactive mode.
    *
-   * In general, this tells you if you are on `stdin` or are you piping data.
+   * In general, this tells the yser if the user is directly typing into stdin.
    */
   protected function isInteractive(): bool {
     static $cache = null;
@@ -213,17 +220,21 @@ abstract class CLIBase {
   }
 
   /**
-   * Gets the standard output for the current CLI. By default, this is `STDOUT`.
+   * Gets the standard process output for the current CLI.
+   *
+   * By default, this is the process standard output, or file descriptor 1.
    */
   final protected function getStdout(): OutputInterface {
     return $this->stdout;
   }
 
   /**
-   * Gets the standard error for the current CLI.
+   * Gets the standard error output for the current CLI.
    *
-   * This is usually a wrapper around `STDOUT`, and should be used instead of
-   * direct resource access. e.g., `STDERR`.
+   * By default, this is the process standard error, or file descriptor 2.
+   *
+   * This is usually a wrapper around stdout, and should be used instead of
+   * direct resource access.
    */
   final protected function getStderr(): OutputInterface {
     return $this->stderr;
@@ -231,7 +242,7 @@ abstract class CLIBase {
 
   /**
    * This is usually the first call to create an instance of a Hack CLI. By
-   * default, the output is to `STDOUT` and errors are written to `STDERR`. But
+   * default, the output is to stdout and errors are written to stderr. But
    * those can be overriden by the actual concrete instance of this abstract
    * class.
    *
