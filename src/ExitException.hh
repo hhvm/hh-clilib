@@ -11,7 +11,17 @@
 
 namespace Facebook\CLILib;
 
+/**
+ * An `Exception` used when running of the CLI resulted in something other than
+ * success.
+ *
+ * @see CLIException
+ */
 final class ExitException extends CLIException {
+  /**
+   * This exception is created via an exit code, that is usually non-zero, as
+   * zero genreally represents success.
+   */
   public function __construct(
     int $code,
   ) {
