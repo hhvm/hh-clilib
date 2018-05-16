@@ -33,8 +33,8 @@ namespace Facebook\CLILib\CLIOptions;
  * );
  * ```
  *
- * @param $setter An anonymous function that can be used to set a property in
- * the class you are using to implement your CLI.
+ * @param $setter A callable that can be used to set a property in the class you 
+ * are using to implement your CLI.
  * @param $help_text The text shown when the user provides the `--help` flag.
  * @param $long The long name for the flag. e.g., `--verbose`.
  * @param short An optional short name for the flag. e.g., `-v`.
