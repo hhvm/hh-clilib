@@ -35,15 +35,6 @@ abstract class CLIOptionWithRequiredValue extends CLIOption {
    */
   abstract protected function set(string $as_given, string $value): void;
 
-  /**
-   * Process user input, return new argv.
-   *
-   * @param $as_given - the option as specified by the user. Usually matches
-   *   `getShort()` or `getLong()`
-   * @param $value - value specified by the users (e.g. `--long=value`). If
-   *   null, it may be appropriate to take a value from $argv
-   * @param $argv - remaining unprocessed $argv
-   */
   <<__Override>>
   public function apply(
     string $as_given,
