@@ -90,6 +90,8 @@ abstract class CLIOption {
    * @param $value - value specified by the users (e.g. `--long=value`). If
    *   null, it may be appropriate to take a value from $argv
    * @param $argv - remaining unprocessed $argv
+   *
+   * @return the new $argv after this option is applied.
    */
   abstract public function apply(
     string $as_given,
