@@ -14,11 +14,36 @@ namespace Facebook\CLILib\CLIOptions;
 use type Facebook\CLILib\InvalidArgumentException;
 use namespace HH\Lib\{C, Vec};
 
+/**
+ * Adds an option that requires an associated value after it.
+ *
+ * Where a `CLIOptionFlag` requires no value, a `CLIOptionWithRequiredValue`
+ * does and an `InvalidArgumentException` will be thrown if not provided.
+ *
+ * @see CLIOption
+ * @see CLIOptionFlag
+ */
 abstract class CLIOptionWithRequiredValue extends CLIOption {
   const type TSetter = (function(string):void);
 
+  /**
+   * Set the option with the provided value.
+   *
+   * @param $as_given The option as specified by the user. Usually matches
+   *   `getShort()` or `getLong()`
+   * @param $value The value specified by the user.
+   */
   abstract protected function set(string $as_given, string $value): void;
 
+  /**
+   * Process user input, return new argv.
+   *
+   * @param $as_given - the option as specified by the user. Usually matches
+   *   `getShort()` or `getLong()`
+   * @param $value - value specified by the users (e.g. `--long=value`). If
+   *   null, it may be appropriate to take a value from $argv
+   * @param $argv - remaining unprocessed $argv
+   */
   <<__Override>>
   public function apply(
     string $as_given,
