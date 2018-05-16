@@ -33,7 +33,7 @@ namespace Facebook\CLILib\CLIOptions;
  * );
  * ```
  *
- * @param $setter A callable that can be used to set a property in the class you 
+ * @param $setter A callable that can be used to set a property in the class you
  * are using to implement your CLI.
  * @param $help_text The text shown when the user provides the `--help` flag.
  * @param $long The long name for the flag. e.g., `--verbose`.
@@ -73,8 +73,8 @@ function flag(
  * ),
  * ```
  *
- * @param $setter An anonymous function that can be used to set a property in
- * the class you are using to implement your CLI.
+ * @param $setter A callable that can be used to set a property in the class you
+ * are using to implement your CLI.
  * @param $help_text The text shown when the user provides the `--help` flag.
  * @param $long The long name for the flag. e.g., `--output`.
  * @param short An optional short name for the flag. e.g., `-o`.
@@ -123,8 +123,8 @@ function with_required_string(
  * ```
  *
  * @param $enum The enumeration with the valid values for the option.
- * @param $setter An anonymous function that can be used to set a property in
- * the class you are using to implement your CLI.
+ * @param $setter A callable that can be used to set a property in the class you
+ * are using to implement your CLI.
  * @param $help_text The text shown when the user provides the `--help` flag.
  * @param $long The long name for the flag. e.g., `--output`.
  * @param short An optional short name for the flag. e.g., `-o`.
