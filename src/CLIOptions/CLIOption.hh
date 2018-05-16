@@ -32,7 +32,7 @@ abstract class CLIOption {
    * @param $helpText The string to show for this option when `--help` is used.
    * @param $long The long name for the option. It is the name used with `--`.
    * @param $short The optional short name for the option. It is the name used
-   * with `-`.
+   *   with `-`.
    */
   public function __construct(
     private string $helpText,
@@ -62,9 +62,7 @@ abstract class CLIOption {
     $this->short = Str\strip_prefix($short, '-');
   }
 
-  /**
-   * Get the help text associated with this option.
-   */
+  /** @selfdocumenting */
   final public function getHelpText(): string {
     return $this->helpText;
   }
