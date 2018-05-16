@@ -36,6 +36,9 @@ final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue
   /**
    * Creates the option with the required enum that has the valid values.
    *
+   * The enum should be created with the `::class` magic constant, in the
+   * form of `MyEnum::class`.
+   *
    * @param $enumname The enum containing the valid values.
    * @param $setter A callable that can be used to set a property in the class
    * you are using to implement your CLI.
