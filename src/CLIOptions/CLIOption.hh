@@ -13,10 +13,27 @@ namespace Facebook\CLILib\CLIOptions;
 
 use namespace HH\Lib\Str;
 
+/**
+ * This class represents an individual option that can be provided to the Hack
+ * CLI.
+ *
+ * Long versions of an option start with `--`; short versions start with `-`.
+ */
 abstract class CLIOption {
   private string $long;
   private ?string $short = null;
 
+  /**
+   * Create an option for the CLI.
+   *
+   * An option is created by a name and text to show when help is requested.
+   * Optionally, a short name can be provided as well.
+   *
+   * @param $helpText The string to show for this option when `--help` is used.
+   * @param $long The long name for the option. It is the name used with `--`.
+   * @param $short The optional short name for the option. It is the name used
+   * with `-`.
+   */
   public function __construct(
     private string $helpText,
     string $long,
@@ -45,14 +62,25 @@ abstract class CLIOption {
     $this->short = Str\strip_prefix($short, '-');
   }
 
+  /**
+   * Get the help text associated with this option.
+   */
   final public function getHelpText(): string {
     return $this->helpText;
   }
 
+  /**
+   * Get the long name associated with this option.
+   */
   final public function getLong(): string {
     return $this->long;
   }
 
+  /**
+   * Get the short name associated with this option.
+   *
+   * If there is no short name, then `null` is returned.
+   */
   final public function getShort(): ?string {
     return $this->short;
   }
