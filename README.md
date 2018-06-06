@@ -15,4 +15,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-TBC.
+hh-clilib is MIT-licensed.
