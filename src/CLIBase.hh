@@ -343,9 +343,9 @@ abstract class CLIBase {
 
       $value = null;
       if (Str\contains($opt, '=')) {
-        $parts = \explode('=', $opt);
+        $parts = Str\split($opt, '=');
         $opt = $parts[0];
-        $value = \implode('=', Vec\drop($parts, 1));
+        $value = Str\join(Vec\drop($parts, 1), '=');
       }
 
       if (!C\contains_key($opts, $opt)) {
@@ -435,7 +435,7 @@ abstract class CLIBase {
       }
       $out->write(
         $opt->getHelpText()
-        |> \explode("\n", $$)
+        |> Str\split($$, "\n")
         |> Vec\map(
           $$,
           $line ==> "\t".$line."\n",
