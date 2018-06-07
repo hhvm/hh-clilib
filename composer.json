@@ -1,7 +1,10 @@
 {
   "name": "facebook/hh-clilib",
   "require": {
-    "hhvm/hsl": "^1.4",
+    "hhvm/hsl": "^3.26",
     "hhvm/type-assert": "^3.2"
+  },
+  "require-dev": {
+    "hhvm/hhast": "^3.26"
   }
 }

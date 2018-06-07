@@ -65,6 +65,7 @@ final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue
    *   `getShort()` or `getLong()`
    * @param $value The value specified by the user.
    */
+  <<__Override>>
   protected function set(string $as_given, string $value): void {
     $enum = $this->enumname;
     if (!$enum::isValid($value)) {

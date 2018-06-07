@@ -21,7 +21,7 @@ namespace Facebook\CLILib;
  * ```
  * hhvm bin/hh-apidoc -o /tmp ../hh-clilib
  * ```
- * 
+ *
  * This class adds one additional function to the parent `CLIBase`.
  *
  * @see CLIBase

@@ -49,6 +49,7 @@ final class CLIOptionWithRequiredStringValue extends CLIOptionWithRequiredValue 
    *   `getShort()` or `getLong()`
    * @param $value The value specified by the user.
    */
+  <<__Override>>
   protected function set(string $_as_given, string $value): void {
     $setter = $this->setter;
     $setter($value);
