@@ -251,18 +251,29 @@ abstract class CLIBase {
    * @see CLIBase::mainAsync
    */
   final public static function main(): noreturn {
+    $out = new FileHandleOutput(\STDOUT);
+    $err = new FileHandleOutput(\STDERR);
     try {
       $responder = new static(
         vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
-        new FileHandleOutput(\STDOUT),
-        new FileHandleOutput(\STDERR),
+        $out,
+        $err,
       );
       $exit_code = \HH\Asio\join($responder->mainAsync());
       exit($exit_code);
     } catch (ExitException $e) {
-      exit($e->getCode());
+      $code = $e->getCode();
+      $message = $e->getUserMessage();
+      if ($message !== null) {
+        if ($code === 0) {
+          $out->write($message."\n");
+        } else {
+          $err->write($message."\n");
+        }
+      }
+      exit($code);
     } catch (CLIException $e) {
-      \fwrite(\STDERR, $e->getMessage()."\n");
+      $err->write($e->getMessage()."\n");
       exit(1);
     }
   }

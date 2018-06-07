@@ -26,11 +26,20 @@ final class ExitException extends CLIException {
    * Note that success via `new ExitException(0)` is valid usage. For example,
    * you may throw this exception if you are jumping out of the CLI process
    * because you specified a certain flag.
+   *
+   * @param $userMessage Message shown to the user. If the `$code` is zero,
+   *   this will be written to standard output, otherwise it will be written to
+   *   standard error.
    */
   public function __construct(
     int $code,
+    private ?string $userMessage = null,
   ) {
     $this->code = $code;
     parent::__construct('exit(%d)', $code);
+  }
+
+  public function getUserMessage(): ?string {
+    return $this->userMessage;
   }
 }
