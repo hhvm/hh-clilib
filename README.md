@@ -30,7 +30,7 @@ final class MyCLI extends CLIBase {
 
 In `bin/mycli`:
 
-```
+```Hack
 <?hh // not strict because of top-level statements.
 
 require_once(__DIR__.'/../vendor/hh_autoload.php');
@@ -45,7 +45,7 @@ require a value (e.g. `--foo=bar` or `--foo bar`).
 
 You can specify supported options by implemented `getSupportedOptions()`; `--help` is always supported.
 
-```
+```Hack
 <<__Override>>
 protected function getSupportedOptions(): vec<CLIOptions\CLIOption> {
 	return vec[
