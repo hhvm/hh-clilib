@@ -5,6 +5,6 @@
     "hhvm/type-assert": "^3.2"
   },
   "require-dev": {
-    "hhvm/hhast": "^3.26"
+    "hhvm/hhast": "^3.27.0"
   }
 }

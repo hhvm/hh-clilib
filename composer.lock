@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "06fb17188810199d10c50dd322da261a",
+    "content-hash": "069493a7c9c288503551f8821a71ec91",
     "packages": [
         {
             "name": "fredemmott/hack-error-suppressor",
@@ -163,16 +163,16 @@
     "packages-dev": [
         {
             "name": "hhvm/hhast",
-            "version": "v3.26.0",
+            "version": "v3.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhast.git",
-                "reference": "a34b2650c0b982dac81bca318fa845fbed571063"
+                "reference": "2837bd25397f829ee92e1830310344af9ff7f174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhast/zipball/a34b2650c0b982dac81bca318fa845fbed571063",
-                "reference": "a34b2650c0b982dac81bca318fa845fbed571063",
+                "url": "https://api.github.com/repos/hhvm/hhast/zipball/2837bd25397f829ee92e1830310344af9ff7f174",
+                "reference": "2837bd25397f829ee92e1830310344af9ff7f174",
                 "shasum": ""
             },
             "require": {
@@ -188,14 +188,15 @@
                 "phpunit/phpunit": "^5.7"
             },
             "bin": [
-                "bin/hhast-lint"
+                "bin/hhast-lint",
+                "bin/hhast-inspect"
             ],
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "time": "2018-05-10T19:54:22+00:00"
+            "time": "2018-06-11T18:03:07+00:00"
         }
     ],
     "aliases": [],
