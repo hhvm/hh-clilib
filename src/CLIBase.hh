@@ -316,7 +316,7 @@ abstract class CLIBase {
     while(!C\is_empty($argv)) {
       $arg = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
-      if ($argv === '--help' || $arg === '-h') {
+      if ($arg === '--help' || $arg === '-h') {
         $this->displayHelp($stdout);
         throw new ExitException(0);
       }
