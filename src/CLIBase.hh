@@ -90,7 +90,7 @@ abstract class CLIBase {
    * }
    * ```
    */
-  final public function getArgv(): vec<string> {
+  final protected function getArgv(): vec<string> {
     return $this->argv;
   }
 
@@ -293,11 +293,6 @@ abstract class CLIBase {
     // Ignore process name in $argv[0]
     $argv = Vec\drop($argv, 1);
 
-    if (C\contains($argv, '--help') || C\contains($argv, '-h')) {
-      $this->displayHelp($stdout);
-      throw new ExitException(0);
-    }
-
     $not_options = vec[];
 
     $options = $this->getSupportedOptions();
@@ -321,6 +316,10 @@ abstract class CLIBase {
     while(!C\is_empty($argv)) {
       $arg = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
+      if ($argv === '--help' || $arg === '-h') {
+        $this->displayHelp($stdout);
+        throw new ExitException(0);
+      }
 
       // standard 'stop parsing options here' marker
       if ($arg === '--') {

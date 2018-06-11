@@ -41,7 +41,7 @@ abstract class CLIOptionWithRequiredValue extends CLIOption {
     vec<string> $argv,
   ): vec<string> {
     if ($value === null) {
-      if (C\is_empty($argv)) {
+      if (C\is_empty($argv) || $argv[0] === '--') {
         throw new InvalidArgumentException(
           "option '%s' requires a value",
           $as_given,

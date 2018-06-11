@@ -13,19 +13,11 @@ namespace Facebook\CLILib;
 use namespace HH\Lib\Vec;
 use function Facebook\FBExpect\expect;
 
-final class OptionParsingTest extends \PHPUnit\Framework\TestCase {
+final class OptionParsingTest extends TestCase {
   private static function cli(
     string ...$argv
   ): (TestCLIWithoutArguments, TestLib\StringOutput, TestLib\StringOutput) {
-    // $argv[0] is the executable
-    $args = Vec\concat(vec[__FILE__], $argv);
-    $stdout = new TestLib\StringOutput();
-    $stderr = new TestLib\StringOutput();
-    return tuple(
-      new TestCLIWithoutArguments($args, $stdout, $stderr),
-      $stdout,
-      $stderr,
-    );
+    return self::makeCLI(TestCLIWithoutArguments::class, ...$argv);
   }
 
   public function testNoOptions(): void {
@@ -95,5 +87,35 @@ final class OptionParsingTest extends \PHPUnit\Framework\TestCase {
     list($cli, $_, $_) = self::cli('-s=foo', '-1');
     expect($cli->stringValue)->toBeSame('foo');
     expect($cli->flag1)->toBeTrue();
+  }
+
+  public function testOptionWithUnwantedValueAfterEquals(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('--flag1=foo');
+  }
+
+  public function testOptionWithUnwantedValueAsNextArgument(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('--flag1', 'foo');
+  }
+
+  public function testInvalidLongOption(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('--invalid');
+  }
+
+  public function testInvalidShortOption(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('-i');
+  }
+
+  public function testDashDashAsRequiredValueAsNextArgument(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('--string', '--');
+  }
+
+  public function testDashDashAsRequiredValueAfterEquals(): void {
+    list($cli, $_, $_) = self::cli('--string=--');
+    expect($cli->stringValue)->toBeSame('--');
   }
 }

@@ -10,6 +10,10 @@
 
 namespace Facebook\CLILib;
 
-class TestCLIWithoutArguments extends CLIBase {
+class TestCLIWithOptionalArguments extends CLIWithArguments {
   use TestCLITrait;
+
+  public function getArgumentsForTesting(): vec<string> {
+    return $this->getArguments();
+  }
 }

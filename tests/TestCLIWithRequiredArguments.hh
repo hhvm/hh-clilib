@@ -10,6 +10,14 @@
 
 namespace Facebook\CLILib;
 
-class TestCLIWithoutArguments extends CLIBase {
+class TestCLIWithRequiredArguments extends CLIWithRequiredArguments {
   use TestCLITrait;
+
+  public static function getHelpTextForRequiredArguments(): vec<string> {
+    return vec['MY HELP TEXT'];
+  }
+
+  public function getArgumentsForTesting(): vec<string> {
+    return $this->getArguments();
+  }
 }
