@@ -1,5 +1,6 @@
 {
   "name": "facebook/hh-clilib",
+  "license": "MIT",
   "require": {
     "hhvm/hsl": "^3.26",
     "hhvm/type-assert": "^3.2"
