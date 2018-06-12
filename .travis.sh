@@ -7,4 +7,4 @@ composer install --ignore-platform-reqs
 hh_client
 
 hhvm vendor/bin/phpunit
-hhvm bin/hhast-lint
+hhvm vendor/bin/hhast-lint
