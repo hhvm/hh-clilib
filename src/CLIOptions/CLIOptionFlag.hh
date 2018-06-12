@@ -10,6 +10,8 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
+use type Facebook\CLILib\InvalidArgumentException;
+
 final class CLIOptionFlag extends CLIOption {
   const type TSetter = (function():void);
 
@@ -34,13 +36,11 @@ final class CLIOptionFlag extends CLIOption {
     vec<string> $argv,
   ): vec<string> {
     if ($value !== null) {
-      \fprintf(
-        \STDERR,
+      throw new InvalidArgumentException(
         "'%s' specifies a value, however values aren't supported for that ".
-        "option.\n",
+        "option",
         $as_given,
       );
-      exit(1);
     }
     $this->set();
     return $argv;

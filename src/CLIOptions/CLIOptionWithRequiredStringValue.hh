@@ -1,4 +1,4 @@
-<?hh // strict
+<?hh
 /*
  *  Copyright (c) 2017-present, Facebook, Inc.
  *  All rights reserved.
@@ -12,10 +12,11 @@ namespace Facebook\CLILib\CLIOptions;
 
 use namespace HH\Lib\{C, Vec};
 
-final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue {
+final class CLIOptionWithRequiredStringValue extends CLIOptionWithRequiredValue {
+  const type TSetter = (function(string):void);
+
   public function __construct(
-    private enumname<T> $enumname,
-    private (function(T): void) $setter,
+    private self::TSetter $setter,
     string $help_text,
     string $long,
     ?string $short,
@@ -23,9 +24,8 @@ final class CLIOptionWithRequiredEnumValue<T> extends CLIOptionWithRequiredValue
     parent::__construct($help_text, $long, $short);
   }
 
-  protected function set(string $value): void {
-    $enum = $this->enumname;
+  protected function set(string $_as_given, string $value): void {
     $setter = $this->setter;
-    $setter($enum::assert($value));
+    $setter($value);
   }
 }
