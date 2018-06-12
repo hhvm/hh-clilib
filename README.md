@@ -9,6 +9,12 @@ This library provides basic command-line handling, including:
 
 It aims for as much code as possible to be in strict mode.
 
+## Installation
+
+```
+hhvm composer.phar require facebook/hh-clilib
+```
+
 ## Examples
 
 In `src/MyCLI.hh`:
