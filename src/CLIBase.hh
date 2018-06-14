@@ -51,7 +51,7 @@ use namespace HH\Lib\{C, Dict, Str, Vec};
  * ```
  */
 <<__ConsistentConstruct>>
-abstract class CLIBase {
+abstract class CLIBase implements ITerminal {
   private vec<string> $arguments = vec[];
 
   /**
@@ -120,123 +120,25 @@ abstract class CLIBase {
     return $this->arguments;
   }
 
-  /**
-   * Determines whether your current terminal supports colors.
-   *
-   * This function will automatically return `true` in some non-interactive
-   * cases, such as non-interactive contexts provided in continuous integration
-   * (CI) systems.
-   */
-  protected function supportsColors(): bool {
-    static $cache;
-
-    if ($cache !== null) {
-      return $cache;
-    }
-
-    $colors = \getenv('CLICOLORS');
-    if (
-      $colors === '1'
-      || $colors === 'yes'
-      || $colors === 'true'
-      || $colors === 'on'
-    ) {
-      $cache = true;
-      return true;
-    }
-    if (
-      $colors === '0'
-      || $colors === 'no'
-      || $colors === 'false'
-      || $colors === 'off'
-    ) {
-      $cache = false;
-      return false;
-    }
-
-    if (\getenv('TRAVIS') === 'true') {
-      $cache = true;
-      return true;
-    }
-
-    if (\getenv('CIRCLECI') === 'true') {
-      $cache = true;
-      return true;
-    }
-
-    if ($this->isInteractive()) {
-      $cache = Str\contains((string) \getenv('TERM'), 'color');
-      return $cache;
-    }
-
-    $cache = false;
-    return false;
+  /** Get the concrete terminal being used by this CLI. */
+  final public function getTerminal(): ITerminal {
+    return $this->terminal;
   }
 
-  /**
-   * Determines whether the current terminal is in interactive mode.
-   *
-   * In general, this is `true` if the user is directly typing into stdin.
-   */
-  protected function isInteractive(): bool {
-    static $cache = null;
-    if ($cache !== null) {
-      return $cache;
-    }
-
-    // Explicit override
-    $noninteractive = \getenv('NONINTERACTIVE');
-    if ($noninteractive !== false) {
-      if ($noninteractive === '1' || $noninteractive === 'true') {
-        $cache = false;
-        return false;
-      }
-      if ($noninteractive === '0' || $noninteractive === 'false') {
-        $cache = true;
-        return true;
-      }
-      $this->stderr->write(
-        "NONINTERACTIVE env var must be 0/1/yes/no/true/false, or unset.\n",
-      );
-    }
-
-    // Detects TravisCI and CircleCI; Travis gives you a TTY for STDIN
-    $ci = \getenv('CI');
-    if ($ci === '1' || $ci === 'true') {
-      $cache = false;
-      return false;
-    }
-
-    // Generic
-    if (\posix_isatty(\STDIN) && \posix_isatty(\STDOUT)) {
-      $cache = true;
-      return true;
-    }
-
-    // Fail-safe
-    $cache = false;
-    return false;
+  final public function supportsColors(): bool {
+    return $this->terminal->supportsColors();
   }
 
-  /**
-   * Gets the standard process output for the current CLI.
-   *
-   * By default, this is the process standard output, or file descriptor 1.
-   */
-  final protected function getStdout(): OutputInterface {
-    return $this->stdout;
+  final public function isInteractive(): bool {
+    return $this->terminal->isInteractive();
   }
 
-  /**
-   * Gets the standard error output for the current CLI.
-   *
-   * By default, this is the process standard error, or file descriptor 2.
-   *
-   * This is usually a wrapper around stdout, and should be used instead of
-   * direct access.
-   */
-  final protected function getStderr(): OutputInterface {
-    return $this->stderr;
+  final public function getStdout(): OutputInterface {
+    return $this->terminal->getStdout();
+  }
+
+  final public function getStderr(): OutputInterface {
+    return $this->terminal->getStderr();
   }
 
   /**
@@ -256,8 +158,7 @@ abstract class CLIBase {
     try {
       $responder = new static(
         vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
-        $out,
-        $err,
+        new Terminal($out, $err),
       );
       $exit_code = \HH\Asio\join($responder->mainAsync());
       exit($exit_code);
@@ -287,8 +188,7 @@ abstract class CLIBase {
    */
   public function __construct(
     private vec<string> $argv,
-    private OutputInterface $stdout,
-    private OutputInterface $stderr,
+    private ITerminal $terminal,
   ) {
     // Ignore process name in $argv[0]
     $argv = Vec\drop($argv, 1);
@@ -317,7 +217,7 @@ abstract class CLIBase {
       $arg = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
       if ($arg === '--help' || $arg === '-h') {
-        $this->displayHelp($stdout);
+        $this->displayHelp($terminal->getStdout());
         throw new ExitException(0);
       }
 

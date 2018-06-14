@@ -18,9 +18,10 @@ final class HelpTest extends TestCase {
   public function testStandalone(): void {
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
+    $terminal = new Terminal($stdout, $stderr);
     expect(
       () ==>
-        new TestCLIWithoutArguments(vec[__FILE__, '--help'], $stdout, $stderr),
+        new TestCLIWithoutArguments(vec[__FILE__, '--help'], $terminal)
     )->toThrow(ExitException::class);
 
     expect($stderr->getBuffer())->toBeSame('');
@@ -34,11 +35,11 @@ final class HelpTest extends TestCase {
   public function testAfterOptions(): void {
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
+    $terminal = new Terminal($stdout, $stderr);
     expect(
       () ==> new TestCLIWithoutArguments(
         vec[__FILE__, '--flag1', '-h'],
-        $stdout,
-        $stderr,
+        $terminal,
       ),
     )->toThrow(ExitException::class);
     expect($stdout->getBuffer())->toContain('--flag2');
