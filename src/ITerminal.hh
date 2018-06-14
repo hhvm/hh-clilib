@@ -34,6 +34,13 @@ interface ITerminal {
   public function isInteractive(): bool;
 
   /**
+   * Gets the standard input for the current CLI.
+   *
+   * By default, this is the process standard input, or file descriptor 0.
+   */
+  public function getStdin(): InputInterface;
+
+  /**
    * Gets the standard process output for the current CLI.
    *
    * By default, this is the process standard output, or file descriptor 1.
@@ -44,9 +51,7 @@ interface ITerminal {
    * Gets the standard error output for the current CLI.
    *
    * By default, this is the process standard error, or file descriptor 2.
-   *
-   * This is usually a wrapper around stdout, and should be used instead of
-   * direct access.
    */
   public function getStderr(): OutputInterface;
+
 }

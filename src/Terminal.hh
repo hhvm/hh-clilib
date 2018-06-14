@@ -19,6 +19,7 @@ use namespace HH\Lib\Str;
  */
 final class Terminal implements ITerminal {
   public function __construct(
+    private InputInterface $stdin,
     private OutputInterface $stdout,
     private OutputInterface $stderr,
   ) {
@@ -116,7 +117,16 @@ final class Terminal implements ITerminal {
   }
 
   /**
-   * Gets the standard process output for the current CLI.
+   * Gets the input interface for the current CLI.
+   *
+   * By default, this is the process standard input, or file descriptor 0.
+   */
+  public function getStdin(): InputInterface{
+    return $this->stdin;
+  }
+
+  /**
+   * Gets the output interface for the current CLI.
    *
    * By default, this is the process standard output, or file descriptor 1.
    */
@@ -125,7 +135,7 @@ final class Terminal implements ITerminal {
   }
 
   /**
-   * Gets the standard error output for the current CLI.
+   * Gets the error interface for the current CLI.
    *
    * By default, this is the process standard error, or file descriptor 2.
    *

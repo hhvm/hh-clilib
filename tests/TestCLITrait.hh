@@ -10,12 +10,15 @@
 
 namespace Facebook\CLILib;
 
+use namespace HH\Lib\Str;
+
 trait TestCLITrait {
   require extends CLIBase;
 
   public ?string $stringValue = null;
   public bool $flag1 = false;
   public bool $flag2 = false;
+  private bool $interactive = false;
   public int $verbosity = 0;
 
   public function getSupportedOptions(): vec<CLIOptions\CLIOption> {
@@ -46,6 +49,14 @@ trait TestCLITrait {
       ),
       CLIOptions\flag(
         () ==> {
+          $this->interactive = true;
+        },
+        'Enable interactive mode',
+        '--interactive',
+        '-i',
+      ),
+      CLIOptions\flag(
+        () ==> {
           $this->verbosity++;
         },
         'Increase verbosity',
@@ -55,7 +66,44 @@ trait TestCLITrait {
     ];
   }
 
+  private async function replAsync(): Awaitable<int> {
+    $in = $this->getStdin();
+    $out = $this->getStdout();
+    $err = $this->getStderr();
+    while (!$in->isEof()) {
+      $out->write('> ');
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop */
+      $line = await $in->readLineAsync();
+      $sep = Str\search($line, ' ');
+      if ($sep === null) {
+        $err->write("Usage: (exit <code>|echo foo bar ....\n");
+        return 1;
+      }
+      $command = Str\slice($line, 0, $sep);
+      $args = Str\slice($line, $sep + 1) |> Str\strip_suffix($$, "\n");
+      switch ($command) {
+        case 'echo':
+          $out->write($args."\n");
+          break;
+        case 'exit':
+          $code = Str\to_int($args);
+          if ($code === null) {
+            $err->write("Exit code must be numeric.\n");
+            return 1;
+          }
+          return $code;
+        default:
+          $err->write("Invalid command\n");
+          return 1;
+      }
+    }
+    return 0;
+  }
+
   public async function mainAsync(): Awaitable<int> {
+    if ($this->interactive) {
+      return await $this->replAsync();
+    }
     $this->getStdout()
       ->write(
         \json_encode(
