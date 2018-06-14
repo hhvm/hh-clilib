@@ -22,8 +22,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
     $args = Vec\concat(vec[__FILE__], $argv);
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
+    $terminal = new Terminal($stdout, $stderr);
     return tuple(
-      new $cli($args, $stdout, $stderr),
+      new $cli($args, $terminal),
       $stdout,
       $stderr,
     );
