@@ -53,7 +53,6 @@ trait TestCLITrait {
         },
         'Enable interactive mode',
         '--interactive',
-        '-i',
       ),
       CLIOptions\flag(
         () ==> {
