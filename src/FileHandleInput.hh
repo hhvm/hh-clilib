@@ -82,18 +82,19 @@ final class FileHandleInput implements InputInterface {
       return '';
     }
 
-    await $this->waitForDataAsync();
     if ($max_bytes === null) {
       // PHP does not document the default value
-      $data = \fgets($this->f);
+      $impl = () ==> \fgets($this->f);
     } else {
       // However, it does document that up to `$length - 1` bytes are returned
-      $data = \fgets($this->f, $max_bytes + 1);
+      $impl = () ==> \fgets($this->f, $max_bytes + 1);
     }
+    $data = $impl();
     if ($data === false) {
-      return '';
+      await $this->waitForDataAsync();
+      $data = $impl();
     }
-    return $data;
+    return $data === false ? '' : $data;
   }
 
   /**
