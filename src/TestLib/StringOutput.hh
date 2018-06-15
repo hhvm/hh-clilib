@@ -30,4 +30,8 @@ final class StringOutput implements OutputInterface {
   public function getBuffer(): string {
     return $this->buffer;
   }
+
+  public function clearBuffer(): void{
+    $this->buffer = '';
+  }
 }

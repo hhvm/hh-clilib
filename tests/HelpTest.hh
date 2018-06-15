@@ -16,9 +16,10 @@ use function Facebook\FBExpect\expect;
 final class HelpTest extends TestCase {
 
   public function testStandalone(): void {
+    $stdin = new TestLib\StringInput();
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
-    $terminal = new Terminal($stdout, $stderr);
+    $terminal = new Terminal($stdin, $stdout, $stderr);
     expect(
       () ==>
         new TestCLIWithoutArguments(vec[__FILE__, '--help'], $terminal)
@@ -33,9 +34,10 @@ final class HelpTest extends TestCase {
   }
 
   public function testAfterOptions(): void {
+    $stdin = new TestLib\StringInput();
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
-    $terminal = new Terminal($stdout, $stderr);
+    $terminal = new Terminal($stdin, $stdout, $stderr);
     expect(
       () ==> new TestCLIWithoutArguments(
         vec[__FILE__, '--flag1', '-h'],

@@ -20,9 +20,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
   ): (T, TestLib\StringOutput, TestLib\StringOutput) {
     // $argv[0] is the executable
     $args = Vec\concat(vec[__FILE__], $argv);
+    $stdin = new TestLib\StringInput();
     $stdout = new TestLib\StringOutput();
     $stderr = new TestLib\StringOutput();
-    $terminal = new Terminal($stdout, $stderr);
+    $terminal = new Terminal($stdin, $stdout, $stderr);
     return tuple(
       new $cli($args, $terminal),
       $stdout,

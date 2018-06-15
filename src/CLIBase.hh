@@ -133,6 +133,10 @@ abstract class CLIBase implements ITerminal {
     return $this->terminal->isInteractive();
   }
 
+  final public function getStdin(): InputInterface {
+    return $this->terminal->getStdin();
+  }
+
   final public function getStdout(): OutputInterface {
     return $this->terminal->getStdout();
   }
@@ -153,12 +157,13 @@ abstract class CLIBase implements ITerminal {
    * @see CLIBase::mainAsync
    */
   final public static function main(): noreturn {
+    $in = new FileHandleInput(\STDIN);
     $out = new FileHandleOutput(\STDOUT);
     $err = new FileHandleOutput(\STDERR);
     try {
       $responder = new static(
         vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
-        new Terminal($out, $err),
+        new Terminal($in, $out, $err),
       );
       $exit_code = \HH\Asio\join($responder->mainAsync());
       exit($exit_code);

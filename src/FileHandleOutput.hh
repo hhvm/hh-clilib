@@ -14,8 +14,9 @@ namespace Facebook\CLILib;
  * This class is provided by the Hack CLI as implementation of `OutputInterface`
  * to allow writing to file handles, including stdout and stderr.
  *
- * See @OutputInterface
- * See @CLIBase
+ * @see FileHandleInput
+ * @see OutputInterface
+ * @see CLIBase
  */
 final class FileHandleOutput implements OutputInterface {
   /**
