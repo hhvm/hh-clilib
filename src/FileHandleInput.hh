@@ -90,7 +90,7 @@ final class FileHandleInput implements InputInterface {
       $impl = () ==> \fgets($this->f, $max_bytes + 1);
     }
     $data = $impl();
-    if ($data === false) {
+    while ($data === false && !$this->isEof()) {
       await $this->waitForDataAsync();
       $data = $impl();
     }
