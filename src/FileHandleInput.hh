@@ -91,6 +91,7 @@ final class FileHandleInput implements InputInterface {
     }
     $data = $impl();
     while ($data === false && !$this->isEof()) {
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       await $this->waitForDataAsync();
       $data = $impl();
     }
