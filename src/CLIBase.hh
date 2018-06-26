@@ -207,6 +207,7 @@ abstract class CLIBase implements ITerminal {
       $opt ==> $opt,
       $opt ==> $opt->getLong(),
     );
+
     $short_options = Vec\filter(
       $options,
       $opt ==> $opt->getShort() !== null,
@@ -215,6 +216,11 @@ abstract class CLIBase implements ITerminal {
       $opt ==> $opt,
       $opt ==> (string) $opt->getShort(),
     );
+
+    $all_options = dict[
+      CLIOptions\CLIOptionType::LONG  => $long_options,
+      CLIOptions\CLIOptionType::SHORT => $short_options,
+    ];
 
     $arguments = vec[];
 
@@ -231,13 +237,9 @@ abstract class CLIBase implements ITerminal {
         break;
       }
 
-      if (Str\starts_with($arg, '--')) {
-        $opt = Str\strip_prefix($arg, '--');
-        $opts = $long_options;
-      } else if (Str\starts_with($arg, '-')) {
-        $opt = Str\strip_prefix($arg, '-');
-        $opts = $short_options;
-      } else {
+      list($option_type, $option_value) = CLIOptions\CLIOption::getTypeAndValue($arg);
+
+      if ($option_type === CLIOptions\CLIOptionType::ARGUMENT) {
         $arguments[] = $arg;
         if ((bool) \getenv('POSIXLY_CORRECT')) {
           break;
@@ -245,21 +247,19 @@ abstract class CLIBase implements ITerminal {
         continue;
       }
 
-      $value = null;
-      if (Str\contains($opt, '=')) {
-        $parts = Str\split($opt, '=');
-        $opt = $parts[0];
-        $value = Str\join(Vec\drop($parts, 1), '=');
+      $options = self::extractOptions($option_value, $option_type);
+      $available_options = $all_options[$option_type];
+
+      foreach ($options as $option => $value) {
+        if (!C\contains_key($available_options, $option)) {
+          \fprintf(\STDERR, "Unrecognized option: %s\n", $arg);
+          exit(1);
+        }
       }
 
-      if (!C\contains_key($opts, $opt)) {
-        throw new InvalidArgumentException(
-          "Unrecognized option: %s",
-          $arg,
-        );
+      foreach ($options as $option => $value) {
+        $argv = $available_options[$option]->apply($option, $value, $argv);
       }
-      $opt = $opts[$opt];
-      $argv = $opt->apply($arg, $value, $argv);
     }
 
     $arguments = Vec\concat($arguments, $argv);
@@ -287,6 +287,36 @@ abstract class CLIBase implements ITerminal {
       "Non-option arguments are not supported; first argument is '%s'",
       C\firstx($arguments),
     );
+  }
+
+  private static function extractOptions(string $arg, CLIOptions\CLIOptionType $type): dict<string, ?string> {
+    $options = vec[];
+    switch ($type) {
+      case CLIOptions\CLIOptionType::LONG:
+        $options[] = $arg;
+        break;
+      case CLIOptions\CLIOptionType::SHORT:
+        $options = Vec\concat($options, Str\chunk($arg));
+        break;
+      default:
+        break;
+    }
+    $is_single_option = C\count($options) === 1;
+    if ($is_single_option) {
+      $value = null;
+      $option = C\onlyx($options);
+      if (Str\contains($option, '=')) {
+        $parts = Str\split($option, '=');
+        $opt = $parts[0];
+        $value = Str\join(Vec\drop($parts, 1), '=');
+      }
+      $result = dict[
+        $option => $value,
+      ];
+    } else {
+      $result = Dict\fill_keys($options, null);
+    }
+    return $result;
   }
 
   /**
