@@ -252,12 +252,13 @@ abstract class CLIBase implements ITerminal {
 
       foreach ($options as $option => $value) {
         if (!C\contains_key($available_options, $option)) {
-          \fprintf(\STDERR, "Unrecognized option: %s\n", $arg);
+          throw new InvalidArgumentException(
+            "Unrecognized option: %s",
+            $arg,
+          );
+        } else {
+          $argv = $available_options[$option]->apply($option, $value, $argv);
         }
-      }
-
-      foreach ($options as $option => $value) {
-        $argv = $available_options[$option]->apply($option, $value, $argv);
       }
     }
 
@@ -295,7 +296,18 @@ abstract class CLIBase implements ITerminal {
         $options[] = $arg;
         break;
       case CLIOptions\CLIOptionType::SHORT:
-        $options = Vec\concat($options, Str\chunk($arg));
+        $equal_sign_position = Str\search($arg, '=', 0);
+        if ($equal_sign_position !== null && $equal_sign_position !== 1) {
+          throw new InvalidArgumentException(
+            "It is restricted to use value assignment in multiple usage of short syntax: -%s",
+            $arg,
+          );
+        }
+        if ($equal_sign_position === null) {
+          $options = Vec\concat($options, Str\chunk($arg));
+        } else {
+          $options[] = $arg;
+        }
         break;
       default:
         break;
@@ -306,7 +318,7 @@ abstract class CLIBase implements ITerminal {
       $option = C\onlyx($options);
       if (Str\contains($option, '=')) {
         $parts = Str\split($option, '=');
-        $opt = $parts[0];
+        $option = $parts[0];
         $value = Str\join(Vec\drop($parts, 1), '=');
       }
       $result = dict[
