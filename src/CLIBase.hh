@@ -253,7 +253,6 @@ abstract class CLIBase implements ITerminal {
       foreach ($options as $option => $value) {
         if (!C\contains_key($available_options, $option)) {
           \fprintf(\STDERR, "Unrecognized option: %s\n", $arg);
-          exit(1);
         }
       }
 
