@@ -39,10 +39,10 @@ abstract class CLIOption {
    * @param $short The optional short name for the option. It is the name used
    *   with `-`.
    */
-   public function __construct(
+  public function __construct(
     private string $helpText,
-      string $long,
-      ?string $short,
+    string $long,
+    ?string $short,
    ) {
     invariant(
       Str\starts_with($long, '--'),
@@ -57,6 +57,7 @@ abstract class CLIOption {
     if ($short === null) {
       return;
     }
+
     invariant(
       Str\starts_with($short, '-'),
       "short argument '%s' doesn't start with '-'",
