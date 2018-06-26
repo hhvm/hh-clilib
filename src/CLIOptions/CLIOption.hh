@@ -43,7 +43,7 @@ abstract class CLIOption {
     private string $helpText,
     string $long,
     ?string $short,
-   ) {
+  ) {
     invariant(
       Str\starts_with($long, '--'),
       "long argument '%s' doesn't start with '--'",
