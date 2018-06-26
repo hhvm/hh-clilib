@@ -118,4 +118,9 @@ final class OptionParsingTest extends TestCase {
     list($cli, $_, $_) = self::cli('--string=--');
     expect($cli->stringValue)->toBeSame('--');
   }
+
+  public function testMultipleShortOptionsWithAssignment(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('-vs=something');
+  }
 }
