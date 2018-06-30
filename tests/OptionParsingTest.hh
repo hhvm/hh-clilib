@@ -123,4 +123,21 @@ final class OptionParsingTest extends TestCase {
     $this->expectException(InvalidArgumentException::class);
     self::cli('-vs=something');
   }
+
+  public function testMultipleShortOptionsWithRequiredValue(): void {
+    $this->expectException(InvalidArgumentException::class);
+    self::cli('-sv');
+  }
+
+  public function testMultipleShortOptions(): void {
+    list($cli, $_, $_) = self::cli('-12v');
+    expect($cli->flag1)->toBeTrue();
+    expect($cli->flag2)->toBeTrue();
+    expect($cli->verbosity)->toBeSame(1);
+  }
+
+  public function testMultipleEqualShortOptionsBehaveAsSingle(): void {
+    list($cli, $_, $_) = self::cli('-vvv');
+    expect($cli->verbosity)->toBeSame(1);
+  }
 }
