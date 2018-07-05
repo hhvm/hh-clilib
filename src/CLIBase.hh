@@ -218,7 +218,7 @@ abstract class CLIBase implements ITerminal {
     );
 
     $all_options = dict[
-      CLIOptions\CLIOptionType::LONG  => $long_options,
+      CLIOptions\CLIOptionType::LONG => $long_options,
       CLIOptions\CLIOptionType::SHORT => $short_options,
     ];
 
@@ -237,7 +237,8 @@ abstract class CLIBase implements ITerminal {
         break;
       }
 
-      list($option_type, $option_value) = CLIOptions\CLIOption::getTypeAndValue($arg);
+      list($option_type, $option_value) =
+        CLIOptions\CLIOption::getTypeAndValue($arg);
 
       if ($option_type === CLIOptions\CLIOptionType::ARGUMENT) {
         $arguments[] = $arg;
@@ -252,10 +253,7 @@ abstract class CLIBase implements ITerminal {
 
       foreach ($options as $option => $value) {
         if (!C\contains_key($available_options, $option)) {
-          throw new InvalidArgumentException(
-            "Unrecognized option: %s",
-            $arg,
-          );
+          throw new InvalidArgumentException("Unrecognized option: %s", $arg);
         } else {
           $argv = $available_options[$option]->apply($option, $value, $argv);
         }
@@ -289,7 +287,10 @@ abstract class CLIBase implements ITerminal {
     );
   }
 
-  private static function extractOptions(string $arg, CLIOptions\CLIOptionType $type): dict<string, ?string> {
+  private static function extractOptions(
+    string $arg,
+    CLIOptions\CLIOptionType $type,
+  ): dict<string, ?string> {
     $options = vec[];
     switch ($type) {
       case CLIOptions\CLIOptionType::LONG:

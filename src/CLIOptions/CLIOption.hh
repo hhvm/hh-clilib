@@ -13,8 +13,8 @@ namespace Facebook\CLILib\CLIOptions;
 use namespace HH\Lib\Str;
 
 enum CLIOptionType: int {
-  LONG     = 1;
-  SHORT    = 2;
+  LONG = 1;
+  SHORT = 2;
   ARGUMENT = 3;
 }
 
@@ -70,7 +70,7 @@ abstract class CLIOption {
     );
     $this->short = Str\strip_prefix($short, '-');
     invariant(
-      Str\length((string) $this->short) === 1,
+      Str\length((string)$this->short) === 1,
       "short argument '%s' length should be equal to 1",
       $short,
     );
@@ -102,7 +102,9 @@ abstract class CLIOption {
   *
   * Long options start with ``--`, whereas short options start with `-`
   */
-  final public static function getTypeAndValue($option): (CLIOptionType, string) {
+  final public static function getTypeAndValue(
+    $option,
+  ): (CLIOptionType, string) {
     if (Str\starts_with($option, '--')) {
       return tuple(CLIOptionType::LONG, Str\strip_prefix($option, '--'));
     } else if (Str\starts_with($option, '-')) {
