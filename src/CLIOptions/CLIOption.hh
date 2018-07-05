@@ -12,6 +12,12 @@ namespace Facebook\CLILib\CLIOptions;
 
 use namespace HH\Lib\Str;
 
+enum CLIOptionType: int {
+  LONG     = 1;
+  SHORT    = 2;
+  ARGUMENT = 3;
+}
+
 /**
  * This class represents an individual option that can be provided to the Hack
  * CLI.
@@ -44,6 +50,10 @@ abstract class CLIOption {
       $long,
     );
     $this->long = Str\strip_prefix($long, '--');
+    invariant(
+      Str\length($this->long) > 0,
+      'long argument length should be greater than zero',
+    );
     if ($short === null) {
       return;
     }
@@ -59,6 +69,11 @@ abstract class CLIOption {
       $short,
     );
     $this->short = Str\strip_prefix($short, '-');
+    invariant(
+      Str\length((string) $this->short) === 1,
+      "short argument '%s' length should be equal to 1",
+      $short,
+    );
   }
 
   /** @selfdocumenting */
@@ -80,6 +95,20 @@ abstract class CLIOption {
    */
   final public function getShort(): ?string {
     return $this->short;
+  }
+
+  /**
+  * Get type and value based on the option provided.
+  *
+  * Long options start with ``--`, whereas short options start with `-`
+  */
+  final public static function getTypeAndValue($option): (CLIOptionType, string) {
+    if (Str\starts_with($option, '--')) {
+      return tuple(CLIOptionType::LONG, Str\strip_prefix($option, '--'));
+    } else if (Str\starts_with($option, '-')) {
+      return tuple(CLIOptionType::SHORT, Str\strip_prefix($option, '-'));
+    }
+    return tuple(CLIOptionType::ARGUMENT, $option);
   }
 
   /**
