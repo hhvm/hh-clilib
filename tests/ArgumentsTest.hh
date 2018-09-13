@@ -15,8 +15,9 @@ use function Facebook\FBExpect\expect;
 
 final class ArgumentsTest extends TestCase {
   public function testProvidingArgumentsToCLIWithoutArguments(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::makeCLI(TestCLIWithoutArguments::class, 'foo');
+    expect(() ==> {
+      self::makeCLI(TestCLIWithoutArguments::class, 'foo');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testNoArgumentToCLIWithOptionalArguments(): void {
@@ -81,8 +82,9 @@ final class ArgumentsTest extends TestCase {
   }
 
   public function testNoArgumentsForCLIWithRequiredArguments(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::makeCLI(TestCLIWithRequiredArguments::class);
+    expect(() ==> {
+      self::makeCLI(TestCLIWithRequiredArguments::class);
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testArgumentsForCLIWithRequiredArguments(): void {

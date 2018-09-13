@@ -61,8 +61,9 @@ final class OptionParsingTest extends TestCase {
   }
 
   public function testWithMissingValue(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('--string');
+    expect(() ==> {
+      self::cli('--string');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testLongOptionWithValueAsNextArgument(): void {
@@ -90,28 +91,33 @@ final class OptionParsingTest extends TestCase {
   }
 
   public function testOptionWithUnwantedValueAfterEquals(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('--flag1=foo');
+    expect(() ==> {
+      self::cli('--flag1=foo');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testOptionWithUnwantedValueAsNextArgument(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('--flag1', 'foo');
+    expect(() ==> {
+      self::cli('--flag1', 'foo');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testInvalidLongOption(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('--invalid');
+    expect(() ==> {
+      self::cli('--invalid');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testInvalidShortOption(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('-i');
+    expect(() ==> {
+      self::cli('-i');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testDashDashAsRequiredValueAsNextArgument(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('--string', '--');
+    expect(() ==> {
+      self::cli('--string', '--');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testDashDashAsRequiredValueAfterEquals(): void {
@@ -120,13 +126,15 @@ final class OptionParsingTest extends TestCase {
   }
 
   public function testMultipleShortOptionsWithAssignment(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('-vs=something');
+    expect(() ==> {
+      self::cli('-vs=something');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testMultipleShortOptionsWithRequiredValue(): void {
-    $this->expectException(InvalidArgumentException::class);
-    self::cli('-sv');
+    expect(() ==> {
+      self::cli('-sv');
+    })->toThrow(InvalidArgumentException::class);
   }
 
   public function testMultipleShortOptions(): void {
