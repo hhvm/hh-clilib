@@ -1,12 +1,17 @@
 {
   "name": "facebook/hh-clilib",
   "license": "MIT",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
   "require": {
     "hhvm/hsl": "^3.26",
     "hhvm/type-assert": "^3.2"
   },
   "require-dev": {
-    "hhvm/hhast": "^3.27.0",
+    "hhvm/hhast": "~3.28.0",
     "phpunit/phpunit": "^5.7",
     "91carriage/phpunit-hhi": "^5.7",
     "facebook/fbexpect": "^1.1.0"

@@ -10,7 +10,6 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Str;
 
 /**
  * This class is used to pass an exception when an argument passed to the CLI

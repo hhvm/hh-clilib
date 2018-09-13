@@ -11,7 +11,7 @@
 namespace Facebook\CLILib\CLIOptions;
 
 use type Facebook\CLILib\InvalidArgumentException;
-use namespace HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{Str, Vec};
 
 /**
  * Creates a CLI option that requrires a value from a provided enum type.

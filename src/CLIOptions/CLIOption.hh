@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2017-present, Facebook, Inc.
  *  All rights reserved.
@@ -103,7 +103,7 @@ abstract class CLIOption {
   * Long options start with ``--`, whereas short options start with `-`
   */
   final public static function getTypeAndValue(
-    $option,
+    string $option,
   ): (CLIOptionType, string) {
     if (Str\starts_with($option, '--')) {
       return tuple(CLIOptionType::LONG, Str\strip_prefix($option, '--'));
