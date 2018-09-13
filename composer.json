@@ -12,8 +12,7 @@
   },
   "require-dev": {
     "hhvm/hhast": "~3.28.0",
-    "phpunit/phpunit": "^5.7",
-    "91carriage/phpunit-hhi": "^5.7",
-    "facebook/fbexpect": "^1.1.0"
+    "facebook/fbexpect": "^2.1.0",
+    "hhvm/hacktest": "^0.2.0"
   }
 }
