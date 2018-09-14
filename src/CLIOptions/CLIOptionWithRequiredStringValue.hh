@@ -10,7 +10,6 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
-use namespace HH\Lib\{C, Vec};
 
 /**
  * Creates a CLI option that requrires an associated string value.
