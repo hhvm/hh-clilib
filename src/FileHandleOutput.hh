@@ -52,6 +52,7 @@ final class FileHandleOutput implements OutputInterface {
     while ($text !== '') {
       $written = $this->rawWrite($text);
       $text = Str\slice($text, $written);
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       await \stream_await($this->f, \STREAM_AWAIT_WRITE);
     }
   }

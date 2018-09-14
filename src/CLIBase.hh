@@ -368,10 +368,13 @@ abstract class CLIBase implements ITerminal {
       }
 
       if ($short !== null) {
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         await $out->writeAsync(Str\format("  -%s, --%s\n", $short, $long));
       } else {
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         await $out->writeAsync(Str\format("  --%s\n", $long));
       }
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       await $out->writeAsync(
         $opt->getHelpText()
           |> Str\split($$, "\n")
