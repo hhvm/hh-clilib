@@ -32,14 +32,7 @@ final class FileHandleInput implements InputInterface {
   }
 
   private async function waitForDataAsync(): Awaitable<void> {
-    // `stream_await` without a timeout is broken:
-    //   https://github.com/facebook/hhvm/issues/8230
-    // So, why this number? `stream_await` takes a double of seconds, but
-    // internally, FileAwait converts it into an int64_t of milliseconds. This
-    // means that the largest timeout is PHP_INT_MAX ms, so /1000 to get
-    // seconds, then fudge a little because of floating point precision
-    $magic = (\PHP_INT_MAX / 1000) - 1.1;
-    await \stream_await($this->f, \STREAM_AWAIT_READ, $magic);
+    await \stream_await($this->f, \STREAM_AWAIT_READ);
   }
 
   /**

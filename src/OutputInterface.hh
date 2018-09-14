@@ -25,7 +25,22 @@ interface OutputInterface {
    *
    * @return the number of bytes written.
    */
+  public function rawWrite(string $_): int;
+
+  /**
+   * DEPRECATED: Write a string to output.
+   *
+   * Use `writeAsync` or `rawWrite` instead.
+   *
+   * @return the number of bytes written.
+   */
   public function write(string $_): int;
+
+  /**
+   * Fully write a string to otuput.
+   */
+  public function writeAsync(string $_): Awaitable<void>;
+
   /**
    * Returns `true` if we have hit the end of the file for the stream.
    */

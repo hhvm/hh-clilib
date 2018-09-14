@@ -10,6 +10,8 @@
 
 namespace Facebook\CLILib;
 
+use namespace HH\Lib\Str;
+
 /**
  * This class is provided by the Hack CLI as implementation of `OutputInterface`
  * to allow writing to file handles, including stdout and stderr.
@@ -30,6 +32,7 @@ final class FileHandleOutput implements OutputInterface {
   public function __construct(
     private resource $f,
   ) {
+    \stream_set_blocking($f, false);
   }
 
   /**
@@ -37,8 +40,20 @@ final class FileHandleOutput implements OutputInterface {
    *
    * @return The number of bytes written or a code of failure.
    */
-  public function write(string $text): int {
+  public function rawWrite(string $text): int {
     return \fwrite($this->f, $text);
+  }
+
+  public function write(string $text): int {
+    return $this->rawWrite($text);
+  }
+
+  public async function writeAsync(string $text): Awaitable<void> {
+    while ($text !== '') {
+      $written = $this->rawWrite($text);
+      $text = Str\slice($text, $written);
+      await \stream_await($this->f, \STREAM_AWAIT_WRITE);
+    }
   }
 
   /**

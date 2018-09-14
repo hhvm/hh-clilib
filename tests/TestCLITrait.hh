@@ -70,29 +70,29 @@ trait TestCLITrait {
     $out = $this->getStdout();
     $err = $this->getStderr();
     while (!$in->isEof()) {
-      $out->write('> ');
+      await $out->writeAsync('> ');
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop */
       $line = await $in->readLineAsync();
       $sep = Str\search($line, ' ');
       if ($sep === null) {
-        $err->write("Usage: (exit <code>|echo foo bar ....\n");
+        await $err->writeAsync("Usage: (exit <code>|echo foo bar ....\n");
         return 1;
       }
       $command = Str\slice($line, 0, $sep);
       $args = Str\slice($line, $sep + 1) |> Str\strip_suffix($$, "\n");
       switch ($command) {
         case 'echo':
-          $out->write($args."\n");
+          await $out->writeAsync($args."\n");
           break;
         case 'exit':
           $code = Str\to_int($args);
           if ($code === null) {
-            $err->write("Exit code must be numeric.\n");
+            await $err->writeAsync("Exit code must be numeric.\n");
             return 1;
           }
           return $code;
         default:
-          $err->write("Invalid command\n");
+          await $err->writeAsync("Invalid command\n");
           return 1;
       }
     }
@@ -103,8 +103,8 @@ trait TestCLITrait {
     if ($this->interactive) {
       return await $this->replAsync();
     }
-    $this->getStdout()
-      ->write(
+    await $this->getStdout()
+      ->writeAsync(
         \json_encode(
           dict[
             'string' => $this->stringValue,

@@ -93,9 +93,9 @@ final class Terminal implements ITerminal {
         $cache = true;
         return true;
       }
-      $this->stderr->write(
+      \HH\Asio\join($this->stderr->writeAsync(
         "NONINTERACTIVE env var must be 0/1/yes/no/true/false, or unset.\n",
-      );
+      ));
     }
 
     // Detects TravisCI and CircleCI; Travis gives you a TTY for STDIN

@@ -18,9 +18,17 @@ use namespace HH\Lib\Str;
 final class StringOutput implements OutputInterface {
   private string $buffer = '';
 
-  public function write(string $data): int {
+  public function rawWrite(string $data): int {
     $this->buffer .= $data;
     return Str\length($data);
+  }
+
+  public function write(string $data): int {
+    return $this->rawWrite($data);
+  }
+
+  public async function writeAsync(string $data): Awaitable<void> {
+    $this->buffer .= $data;
   }
 
   public function isEof(): bool {

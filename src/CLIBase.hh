@@ -57,8 +57,7 @@ abstract class CLIBase implements ITerminal {
   /**
    * Returns the list of options that is supported by the CLI.
    */
-  abstract protected function getSupportedOptions(
-  ): vec<CLIOptions\CLIOption>;
+  abstract protected function getSupportedOptions(): vec<CLIOptions\CLIOption>;
 
   /**
    * This is implemented by all implementations of the Hack CLI and provides
@@ -172,14 +171,14 @@ abstract class CLIBase implements ITerminal {
       $message = $e->getUserMessage();
       if ($message !== null) {
         if ($code === 0) {
-          $out->write($message."\n");
+          \HH\Asio\join($out->writeAsync($message."\n"));
         } else {
-          $err->write($message."\n");
+          \HH\Asio\join($err->writeAsync($message."\n"));
         }
       }
       exit($code);
     } catch (CLIException $e) {
-      $err->write($e->getMessage()."\n");
+      \HH\Asio\join($err->writeAsync($e->getMessage()."\n"));
       exit(1);
     }
   }
@@ -202,20 +201,11 @@ abstract class CLIBase implements ITerminal {
 
     $options = $this->getSupportedOptions();
 
-    $long_options = Dict\pull(
-      $options,
-      $opt ==> $opt,
-      $opt ==> $opt->getLong(),
-    );
+    $long_options =
+      Dict\pull($options, $opt ==> $opt, $opt ==> $opt->getLong());
 
-    $short_options = Vec\filter(
-      $options,
-      $opt ==> $opt->getShort() !== null,
-    ) |> Dict\pull(
-      $$,
-      $opt ==> $opt,
-      $opt ==> (string) $opt->getShort(),
-    );
+    $short_options = Vec\filter($options, $opt ==> $opt->getShort() !== null)
+      |> Dict\pull($$, $opt ==> $opt, $opt ==> (string)$opt->getShort());
 
     $all_options = dict[
       CLIOptions\CLIOptionType::LONG => $long_options,
@@ -224,11 +214,11 @@ abstract class CLIBase implements ITerminal {
 
     $arguments = vec[];
 
-    while(!C\is_empty($argv)) {
+    while (!C\is_empty($argv)) {
       $arg = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
       if ($arg === '--help' || $arg === '-h') {
-        $this->displayHelp($terminal->getStdout());
+        \HH\Asio\join($this->displayHelpAsync($terminal->getStdout()));
         throw new ExitException(0);
       }
 
@@ -242,7 +232,7 @@ abstract class CLIBase implements ITerminal {
 
       if ($option_type === CLIOptions\CLIOptionType::ARGUMENT) {
         $arguments[] = $arg;
-        if ((bool) \getenv('POSIXLY_CORRECT')) {
+        if ((bool)\getenv('POSIXLY_CORRECT')) {
           break;
         }
         continue;
@@ -337,7 +327,9 @@ abstract class CLIBase implements ITerminal {
    * The help information is automatically generated. The default generation
    * can be overridden - but generally not necessary.
    */
-  public function displayHelp(OutputInterface $out): void {
+  public async function displayHelpAsync(
+    OutputInterface $out,
+  ): Awaitable<void> {
     $usage = 'Usage: '.C\firstx($this->argv);
 
     $opts = $this->getSupportedOptions();
@@ -347,23 +339,24 @@ abstract class CLIBase implements ITerminal {
       $usage .= ' [OPTIONS]';
     }
     if ($this instanceof CLIWithRequiredArguments) {
-      $class = TypeAssert\classname_of(
-        CLIWithRequiredArguments::class,
-        static::class,
-      );
-      $usage .= ' '.\implode(' ', $class::getHelpTextForRequiredArguments()).
-        ' ['.$class::getHelpTextForOptionalArguments().' ...]';
+      $class =
+        TypeAssert\classname_of(CLIWithRequiredArguments::class, static::class);
+      $usage .= ' '.
+        \implode(' ', $class::getHelpTextForRequiredArguments()).
+        ' ['.
+        $class::getHelpTextForOptionalArguments().
+        ' ...]';
     } else if ($this instanceof CLIWithArguments) {
       $class = TypeAssert\classname_of(CLIWithArguments::class, static::class);
       $usage .= ' ['.$class::getHelpTextForOptionalArguments().' ...]';
     }
 
-    $out->write($usage."\n");
+    await $out->writeAsync($usage."\n");
     if (C\is_empty($opts)) {
       return;
     }
 
-    $out->write("\nOptions:\n");
+    await $out->writeAsync("\nOptions:\n");
     foreach ($opts as $opt) {
       $short = $opt->getShort();
       $long = $opt->getLong();
@@ -375,21 +368,25 @@ abstract class CLIBase implements ITerminal {
       }
 
       if ($short !== null) {
-        $out->write(Str\format("  -%s, --%s\n", $short, $long));
+        await $out->writeAsync(Str\format("  -%s, --%s\n", $short, $long));
       } else {
-        $out->write(Str\format("  --%s\n", $long));
+        await $out->writeAsync(Str\format("  --%s\n", $long));
       }
-      $out->write(
+      await $out->writeAsync(
         $opt->getHelpText()
-        |> Str\split($$, "\n")
-        |> Vec\map(
-          $$,
-          $line ==> "\t".$line."\n",
-        )
-        |> \implode('', $$),
+          |> Str\split($$, "\n")
+          |> Vec\map($$, $line ==> "\t".$line."\n")
+          |> \implode('', $$),
       );
     }
-    $out->write("  -h, --help\n");
-    $out->write("\tdisplay this text and exit\n");
+    await $out->writeAsync("  -h, --help\n");
+    await $out->writeAsync("\tdisplay this text and exit\n");
+  }
+
+  /**
+   * DEPRECATED: use `displayHelpAsync` instead.
+   */
+  final public function displayHelp(OutputInterface $out): void {
+    \HH\Asio\join($this->displayHelpAsync($out));
   }
 }
