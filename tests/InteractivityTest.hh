@@ -27,28 +27,28 @@ final class InteractivityTest extends TestCase {
     return tuple($cli, $stdin, $stdout, $stderr);
   }
 
-  public function testClosedInput(): void {
+  public async function testClosedInput(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
     $in->close();
-    $ret = \HH\Asio\join($cli->mainAsync());
+    $ret = await $cli->mainAsync();
     expect($ret)->toBeSame(0);
     expect($out->getBuffer())->toBeSame('');
     expect($err->getBuffer())->toBeSame('');
   }
 
-  public function testSingleCommandBeforeStart(): void {
+  public async function testSingleCommandBeforeStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
     $in->appendToBuffer("echo hello, world\n");
     $in->close();
-    $ret = \HH\Asio\join($cli->mainAsync());
+    $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n");
     expect($ret)->toBeSame(0);
   }
 
-  public function testSingleCommandAfterStart(): void {
+  public async function testSingleCommandAfterStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    list($ret, $_) = \HH\Asio\join(Tuple\from_async(
+    list($ret, $_) = await Tuple\from_async(
       $cli->mainAsync(),
       async {
         await \HH\Asio\later();
@@ -56,26 +56,26 @@ final class InteractivityTest extends TestCase {
         $out->clearBuffer();
         $in->appendToBuffer("exit 123\n");
       },
-    ));
+    );
     expect($ret)->toBeSame(123);
     expect($out->getBuffer())->toBeSame('');
   }
 
-  public function testMultipleCommandBeforeStart(): void {
+  public async function testMultipleCommandBeforeStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
     $in->appendToBuffer("echo hello, world\n");
     $in->appendToBuffer("echo foo bar\n");
     $in->appendToBuffer("exit 123\n");
     $in->close();
-    $ret = \HH\Asio\join($cli->mainAsync());
+    $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n> foo bar\n> ");
     expect($ret)->toBeSame(123);
   }
 
-  public function testMultipleCommandsSequentially(): void {
+  public async function testMultipleCommandsSequentially(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    list($ret, $_) = \HH\Asio\join(Tuple\from_async(
+    list($ret, $_) = await Tuple\from_async(
       $cli->mainAsync(),
       async {
         await \HH\Asio\later();
@@ -95,7 +95,7 @@ final class InteractivityTest extends TestCase {
         $out->clearBuffer();
         $in->appendToBuffer("exit 42\n");
       },
-    ));
+    );
     expect($ret)->toBeSame(42);
     expect($out->getBuffer())->toBeSame('');
     expect($err->getBuffer())->toBeSame('');
