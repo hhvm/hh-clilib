@@ -11,7 +11,7 @@
     "hhvm/type-assert": "^3.2"
   },
   "require-dev": {
-    "hhvm/hhast": "~3.28.0",
+    "hhvm/hhast": "^3.29",
     "facebook/fbexpect": "^2.1.0",
     "hhvm/hacktest": "^0.2.0"
   }
