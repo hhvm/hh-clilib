@@ -29,7 +29,7 @@ final class InteractivityTest extends TestCase {
 
   public async function testClosedInput(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    $in->close();
+    await $in->closeAsync();
     $ret = await $cli->mainAsync();
     expect($ret)->toBeSame(0);
     expect($out->getBuffer())->toBeSame('');
@@ -39,7 +39,7 @@ final class InteractivityTest extends TestCase {
   public async function testSingleCommandBeforeStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
     $in->appendToBuffer("echo hello, world\n");
-    $in->close();
+    await $in->closeAsync();
     $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n");
@@ -66,7 +66,7 @@ final class InteractivityTest extends TestCase {
     $in->appendToBuffer("echo hello, world\n");
     $in->appendToBuffer("echo foo bar\n");
     $in->appendToBuffer("exit 123\n");
-    $in->close();
+    await $in->closeAsync();
     $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n> foo bar\n> ");

@@ -69,7 +69,7 @@ trait TestCLITrait {
     $in = $this->getStdin();
     $out = $this->getStdout();
     $err = $this->getStderr();
-    while (!$in->isEof()) {
+    while (!$in->isEndOfFile()) {
       await $out->writeAsync('> ');
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop */
       $line = await $in->readLineAsync();

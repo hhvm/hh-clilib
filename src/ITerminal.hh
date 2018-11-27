@@ -9,6 +9,7 @@
  */
 
 namespace Facebook\CLILib;
+use namespace HH\Lib\Experimental\IO;
 
 /** Interface encapsulating the terminal.
  *
@@ -38,20 +39,20 @@ interface ITerminal {
    *
    * By default, this is the process standard input, or file descriptor 0.
    */
-  public function getStdin(): InputInterface;
+  public function getStdin(): IO\ReadHandle;
 
   /**
    * Gets the standard process output for the current CLI.
    *
    * By default, this is the process standard output, or file descriptor 1.
    */
-  public function getStdout(): OutputInterface;
+  public function getStdout(): IO\WriteHandle;
 
   /**
    * Gets the standard error output for the current CLI.
    *
    * By default, this is the process standard error, or file descriptor 2.
    */
-  public function getStderr(): OutputInterface;
+  public function getStderr(): IO\WriteHandle;
 
 }

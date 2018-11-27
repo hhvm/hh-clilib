@@ -11,6 +11,7 @@
 namespace Facebook\CLILib;
 
 use namespace HH\Lib\Str;
+use namespace HH\Lib\Experimental\IO;
 
 /**
  * Default implementation of an `ITerminal`.
@@ -19,9 +20,9 @@ use namespace HH\Lib\Str;
  */
 final class Terminal implements ITerminal {
   public function __construct(
-    private InputInterface $stdin,
-    private OutputInterface $stdout,
-    private OutputInterface $stderr,
+    private IO\ReadHandle $stdin,
+    private IO\WriteHandle $stdout,
+    private IO\WriteHandle $stderr,
   ) {
   }
 
@@ -121,7 +122,7 @@ final class Terminal implements ITerminal {
    *
    * By default, this is the process standard input, or file descriptor 0.
    */
-  public function getStdin(): InputInterface{
+  public function getStdin(): IO\ReadHandle {
     return $this->stdin;
   }
 
@@ -130,7 +131,7 @@ final class Terminal implements ITerminal {
    *
    * By default, this is the process standard output, or file descriptor 1.
    */
-  public function getStdout(): OutputInterface {
+  public function getStdout(): IO\WriteHandle {
     return $this->stdout;
   }
 
@@ -142,7 +143,7 @@ final class Terminal implements ITerminal {
    * This is usually a wrapper around stdout, and should be used instead of
    * direct access.
    */
-  public function getStderr(): OutputInterface {
+  public function getStderr(): IO\WriteHandle {
     return $this->stderr;
   }
 }

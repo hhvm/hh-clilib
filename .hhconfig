@@ -4,3 +4,5 @@ safe_array = true
 safe_vector_array = true
 disallow_destruct = true
 user_attributes=
+# circular dependency with HHAST
+ignored_paths=["vendor\/hhvm\/hhast\/.+"]

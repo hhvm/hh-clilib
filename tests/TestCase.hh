@@ -13,7 +13,7 @@ namespace Facebook\CLILib;
 use namespace HH\Lib\Vec;
 use function Facebook\FBExpect\expect;
 
-abstract class TestCase extends \Facebook\HackTest\HackTestCase {
+abstract class TestCase extends \Facebook\HackTest\HackTest {
   protected static function makeCLI<T as CLIBase>(
     classname<T> $cli, 
     string ...$argv

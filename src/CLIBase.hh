@@ -12,6 +12,7 @@ namespace Facebook\CLILib;
 
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Str, Vec};
+use namespace HH\Lib\Experimental\IO;
 
 /**
  * This class contains all of the core functionality for using the Hack CLI
@@ -132,16 +133,22 @@ abstract class CLIBase implements ITerminal {
     return $this->terminal->isInteractive();
   }
 
-  final public function getStdin(): InputInterface {
+  final public function getStdin(): IO\ReadHandle {
     return $this->terminal->getStdin();
   }
 
-  final public function getStdout(): OutputInterface {
+  final public function getStdout(): IO\WriteHandle {
     return $this->terminal->getStdout();
   }
 
-  final public function getStderr(): OutputInterface {
+  final public function getStderr(): IO\WriteHandle {
     return $this->terminal->getStderr();
+  }
+
+  <<__Deprecated('use runAsync instead')>>
+  final public static function main(): noreturn {
+    $result = \HH\Asio\join(static::runAsync());
+    exit($result);
   }
 
   /**
@@ -150,36 +157,43 @@ abstract class CLIBase implements ITerminal {
    * those can be overriden by the actual concrete instance of this abstract
    * class.
    *
-   * This function does not return anything. Instead `exit()` is called with an
-   * exit code for success and failure.
+   * This function returns the exit code, and is expected to be used
+   * from an `<<__EntryPoint>>` function, e.g.:
+   *
+   * ```
+   * <<__EntryPoint>>
+   * async function myMainAsync(): Awaitable<noreturn> {
+   *   $code = await MyCLI::runAsync();
+   *   exit($code);
+   * }
+   * ```
    *
    * @see CLIBase::mainAsync
    */
-  final public static function main(): noreturn {
-    $in = new FileHandleInput(\STDIN);
-    $out = new FileHandleOutput(\STDOUT);
-    $err = new FileHandleOutput(\STDERR);
+  final public static async function runAsync(): Awaitable<int> {
+    $in = IO\stdin();
+    $out = IO\stdout();
+    $err = IO\stderr();
     try {
       $responder = new static(
         vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
         new Terminal($in, $out, $err),
       );
-      $exit_code = \HH\Asio\join($responder->mainAsync());
-      exit($exit_code);
+      return await $responder->mainAsync();
     } catch (ExitException $e) {
       $code = $e->getCode();
       $message = $e->getUserMessage();
       if ($message !== null) {
         if ($code === 0) {
-          \HH\Asio\join($out->writeAsync($message."\n"));
+          await $out->writeAsync($message."\n");
         } else {
-          \HH\Asio\join($err->writeAsync($message."\n"));
+          await $err->writeAsync($message."\n");
         }
       }
-      exit($code);
+      return $code;
     } catch (CLIException $e) {
-      \HH\Asio\join($err->writeAsync($e->getMessage()."\n"));
-      exit(1);
+      await $err->writeAsync($e->getMessage()."\n");
+      return 1;
     }
   }
 
@@ -328,7 +342,7 @@ abstract class CLIBase implements ITerminal {
    * can be overridden - but generally not necessary.
    */
   public async function displayHelpAsync(
-    OutputInterface $out,
+    IO\WriteHandle $out,
   ): Awaitable<void> {
     $usage = 'Usage: '.C\firstx($this->argv);
 
@@ -389,7 +403,7 @@ abstract class CLIBase implements ITerminal {
   /**
    * DEPRECATED: use `displayHelpAsync` instead.
    */
-  final public function displayHelp(OutputInterface $out): void {
+  final public function displayHelp(IO\WriteHandle $out): void {
     \HH\Asio\join($this->displayHelpAsync($out));
   }
 }

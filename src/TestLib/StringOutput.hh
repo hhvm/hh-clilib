@@ -13,26 +13,31 @@ namespace Facebook\CLILib\TestLib;
 use type Facebook\CLILib\OutputInterface;
 
 use namespace HH\Lib\Str;
+use namespace HH\Lib\Experimental\IO;
 
 /** This class stores all CLI output in a string */
-final class StringOutput implements OutputInterface {
+final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
   private string $buffer = '';
 
-  public function rawWrite(string $data): int {
+  public function rawWriteBlocking(string $data): int {
     $this->buffer .= $data;
     return Str\length($data);
-  }
-
-  public function write(string $data): int {
-    return $this->rawWrite($data);
   }
 
   public async function writeAsync(string $data): Awaitable<void> {
     $this->buffer .= $data;
   }
 
-  public function isEof(): bool {
+  public function isEndOfFile(): bool {
     return false;
+  }
+
+  public async function flushAsync(): Awaitable<void> {
+    // nothing to do here
+  }
+
+  public async function closeAsync(): Awaitable<void> {
+    await $this->flushAsync();
   }
 
   public function getBuffer(): string {

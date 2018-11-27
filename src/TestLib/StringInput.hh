@@ -12,14 +12,13 @@ namespace Facebook\CLILib\TestLib;
 
 use type Facebook\CLILib\InputInterface;
 use namespace HH\Lib\{Math, Str};
+use namespace HH\Lib\Experimental\IO;
 
-/** This class stores all CLI output in a string.
+/** This class exposes a string as if it were STDIN.
  *
  * It is intended for unit testing.
- *
- * @see FileHandleInput
  */
-final class StringInput implements InputInterface {
+final class StringInput implements IO\ReadHandle, IO\UserspaceHandle {
   private string $buffer = '';
   private bool $isClosed = false;
 
@@ -58,6 +57,21 @@ final class StringInput implements InputInterface {
     return Str\slice($buf, 0, $max_bytes);
   }
 
+  public function rawReadBlocking(?int $max_bytes = null): string {
+    if ($max_bytes === null) {
+      $max_bytes = Str\length($this->buffer);
+    }
+    if ($max_bytes === 0) {
+      return '';
+    }
+
+    invariant($max_bytes >= 0, '$max_bytes must be null or non-negative');
+
+    $ret = Str\slice($this->buffer, 0, $max_bytes);
+    $this->buffer = Str\slice($this->buffer, $max_bytes);
+    return $ret;
+  }
+
   public async function readLineAsync(?int $max_bytes = null): Awaitable<string> {
     invariant(
       $max_bytes === null || $max_bytes >= 0,
@@ -79,11 +93,11 @@ final class StringInput implements InputInterface {
     return Str\slice($buf, 0, $pos);
   }
 
-  public function close(): void {
+  public async function closeAsync(): Awaitable<void> {
     $this->isClosed = true;
   }
 
-  public function isEof(): bool {
+  public function isEndOfFile(): bool {
     return $this->buffer === '' && $this->isClosed;
   }
 }
