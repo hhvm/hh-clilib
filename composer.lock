@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13b727dca7b4c6ded1456d8dd9010a81",
+    "content-hash": "86c8bb0f7da57f8cce5588dd00fcdacc",
     "packages": [
         {
             "name": "hhvm/hhvm-autoload",
@@ -93,6 +93,37 @@
             "time": "2018-10-18T18:21:07+00:00"
         },
         {
+            "name": "hhvm/hsl-experimental",
+            "version": "v3.29.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hsl-experimental.git",
+                "reference": "cc326efe4e93e9a447f468a89963b3dd6a0aac0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/cc326efe4e93e9a447f468a89963b3dd6a0aac0e",
+                "reference": "cc326efe4e93e9a447f468a89963b3dd6a0aac0e",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^3.29.0",
+                "hhvm/hhvm-autoload": "^1.4",
+                "hhvm/hsl": "^3.29.0"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.0",
+                "hhvm/hacktest": "^1.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Hack Standard Library - Experimental Additions",
+            "time": "2018-11-14T18:31:30+00:00"
+        },
+        {
             "name": "hhvm/type-assert",
             "version": "v3.2.5",
             "source": {
@@ -135,59 +166,6 @@
         }
     ],
     "packages-dev": [
-        {
-            "name": "facebook/definition-finder",
-            "version": "v2.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/definition-finder.git",
-                "reference": "1c952746196c285c93620c54ccc69e5c182a57fe"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/definition-finder/zipball/1c952746196c285c93620c54ccc69e5c182a57fe",
-                "reference": "1c952746196c285c93620c54ccc69e5c182a57fe",
-                "shasum": ""
-            },
-            "require": {
-                "hhvm": "^3.29.0",
-                "hhvm/hhast": "^3.29.0",
-                "hhvm/hhvm-autoload": "^1.6",
-                "hhvm/hsl": "^3.26.0",
-                "hhvm/type-assert": "^3.2"
-            },
-            "require-dev": {
-                "facebook/fbexpect": "^2.0.0",
-                "hhvm/hacktest": "^1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ],
-                "files": [
-                    "autoload_files.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Find definitions in PHP or Hack files. Useful for autoloaders.",
-            "homepage": "https://github.com/hhvm/definitions-finder",
-            "keywords": [
-                "autoload",
-                "definitions",
-                "hack",
-                "hhvm"
-            ],
-            "time": "2018-10-25T19:50:52+00:00"
-        },
         {
             "name": "facebook/difflib",
             "version": "v1.0",
@@ -254,105 +232,29 @@
             "time": "2018-10-18T16:44:23+00:00"
         },
         {
-            "name": "facebook/fbmarkdown",
-            "version": "v1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/fbmarkdown.git",
-                "reference": "5366ca38b22bcd9143a47b1b0ffdb5b9105b5231"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/fbmarkdown/zipball/5366ca38b22bcd9143a47b1b0ffdb5b9105b5231",
-                "reference": "5366ca38b22bcd9143a47b1b0ffdb5b9105b5231",
-                "shasum": ""
-            },
-            "require": {
-                "hhvm": "^3.28",
-                "hhvm/hhvm-autoload": "^1.5",
-                "hhvm/hsl": "^1.1|^3.26.0",
-                "hhvm/type-assert": "^3.1"
-            },
-            "require-dev": {
-                "facebook/fbexpect": "^2.1.0",
-                "hhvm/hacktest": "^1.0",
-                "hhvm/hhast": "^3.26.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Markdown parser and renderer for Hack",
-            "keywords": [
-                "facebook",
-                "gfm",
-                "hack",
-                "markdown"
-            ],
-            "time": "2018-10-19T16:47:34+00:00"
-        },
-        {
-            "name": "facebook/hh-apidoc",
-            "version": "v0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/hh-apidoc.git",
-                "reference": "10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f",
-                "reference": "10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f",
-                "shasum": ""
-            },
-            "require": {
-                "facebook/definition-finder": "^2.0.0",
-                "facebook/fbmarkdown": "^1.0",
-                "facebook/hh-clilib": "^1.0.0",
-                "hhvm": "^3.27.0",
-                "hhvm/hhast": "^3.26.0",
-                "hhvm/hsl": "^1.4|^3.26.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "time": "2018-06-29T16:31:51+00:00"
-        },
-        {
             "name": "hhvm/hacktest",
-            "version": "0.2",
+            "version": "v1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hacktest.git",
-                "reference": "f03361f1b5f3b376a764ab860661c4e8b96e8d7c"
+                "reference": "d83f09283dd60a8001807654afd2de67d8a26cc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hacktest/zipball/f03361f1b5f3b376a764ab860661c4e8b96e8d7c",
-                "reference": "f03361f1b5f3b376a764ab860661c4e8b96e8d7c",
+                "url": "https://api.github.com/repos/hhvm/hacktest/zipball/d83f09283dd60a8001807654afd2de67d8a26cc3",
+                "reference": "d83f09283dd60a8001807654afd2de67d8a26cc3",
                 "shasum": ""
             },
             "require": {
-                "facebook/hh-apidoc": "^0.1",
-                "facebook/hh-clilib": "^1.0",
+                "facebook/hh-clilib": "^1.2.1",
                 "hhvm": "^3.28.0",
                 "hhvm/hhvm-autoload": "^1.6",
                 "hhvm/hsl": "^3.26",
                 "hhvm/type-assert": "^3.2"
             },
             "require-dev": {
-                "91carriage/phpunit-hhi": "^5.7",
-                "facebook/fbexpect": "^1.0.0",
-                "hhvm/hhast": "^3.27",
-                "phpunit/phpunit": "^5.7"
+                "facebook/fbexpect": "^2.0.0",
+                "hhvm/hhast": "^3.27"
             },
             "bin": [
                 "bin/hacktest"
@@ -363,7 +265,7 @@
                 "MIT"
             ],
             "description": "The Hack Test Library",
-            "time": "2018-08-24T23:45:22+00:00"
+            "time": "2018-10-17T22:18:04+00:00"
         },
         {
             "name": "hhvm/hhast",
