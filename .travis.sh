@@ -7,4 +7,5 @@ composer install --ignore-platform-reqs
 hh_client
 
 hhvm vendor/bin/hacktest tests/
-hhvm vendor/bin/hhast-lint
+# Circular dependency that needs updating
+# hhvm vendor/bin/hhast-lint

@@ -12,7 +12,7 @@
     "hhvm/hsl-experimental": "^3.29"
   },
   "require-dev": {
-    "hhvm/hhast": "^3.29",
+    "hhvm/hhast": "dev-master",
     "facebook/fbexpect": "^2.1.0",
     "hhvm/hacktest": "^1.0.0"
   }

@@ -10,7 +10,6 @@
 
 namespace Facebook\CLILib\TestLib;
 
-use type Facebook\CLILib\InputInterface;
 use namespace HH\Lib\{Math, Str};
 use namespace HH\Lib\Experimental\IO;
 

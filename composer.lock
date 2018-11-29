@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86c8bb0f7da57f8cce5588dd00fcdacc",
+    "content-hash": "e9b6a6d95ffacbd56a706bd9de1d80c3",
     "packages": [
         {
             "name": "hhvm/hhvm-autoload",
@@ -269,34 +269,35 @@
         },
         {
             "name": "hhvm/hhast",
-            "version": "v3.29.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhast.git",
-                "reference": "0557ba2579a56f443bd573a1ce90908e282be9fd"
+                "reference": "92c989a956dec5df687a72e7376ff9f19531e3f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhast/zipball/0557ba2579a56f443bd573a1ce90908e282be9fd",
-                "reference": "0557ba2579a56f443bd573a1ce90908e282be9fd",
+                "url": "https://api.github.com/repos/hhvm/hhast/zipball/92c989a956dec5df687a72e7376ff9f19531e3f5",
+                "reference": "92c989a956dec5df687a72e7376ff9f19531e3f5",
                 "shasum": ""
             },
             "require": {
                 "facebook/difflib": "^1.0.0",
-                "facebook/hh-clilib": "^1.1.1",
+                "facebook/hh-clilib": "dev-master",
                 "hhvm": "3.29.*",
                 "hhvm/hsl": "^1.0.0|^3.26.0",
                 "hhvm/type-assert": "^3.1"
             },
             "require-dev": {
                 "facebook/fbexpect": "^2.1.1",
-                "facebook/hack-codegen": "~3.2.1",
+                "facebook/hack-codegen": "^4.0",
                 "hhvm/hacktest": "^1.0",
                 "hhvm/hhvm-autoload": "^1.5"
             },
             "bin": [
                 "bin/hhast-lint",
-                "bin/hhast-inspect"
+                "bin/hhast-inspect",
+                "bin/hhast-migrate"
             ],
             "type": "library",
             "extra": {
@@ -308,12 +309,14 @@
             "license": [
                 "MIT"
             ],
-            "time": "2018-10-18T22:07:15+00:00"
+            "time": "2018-11-29T19:19:05+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "hhvm/hhast": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
