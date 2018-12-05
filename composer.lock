@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3467735381205794082b80437ada12d",
+    "content-hash": "e011337e6e7bf37ed3086aead5c56213",
     "packages": [
         {
             "name": "hhvm/hhvm-autoload",
@@ -94,16 +94,16 @@
         },
         {
             "name": "hhvm/hsl-experimental",
-            "version": "v3.29.2",
+            "version": "v3.29.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hsl-experimental.git",
-                "reference": "cc326efe4e93e9a447f468a89963b3dd6a0aac0e"
+                "reference": "022d36cf4f91bbd3c3925cb16308cdd7adbf6806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/cc326efe4e93e9a447f468a89963b3dd6a0aac0e",
-                "reference": "cc326efe4e93e9a447f468a89963b3dd6a0aac0e",
+                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/022d36cf4f91bbd3c3925cb16308cdd7adbf6806",
+                "reference": "022d36cf4f91bbd3c3925cb16308cdd7adbf6806",
                 "shasum": ""
             },
             "require": {
@@ -121,7 +121,7 @@
                 "MIT"
             ],
             "description": "The Hack Standard Library - Experimental Additions",
-            "time": "2018-11-14T18:31:30+00:00"
+            "time": "2018-12-05T17:08:28+00:00"
         },
         {
             "name": "hhvm/type-assert",

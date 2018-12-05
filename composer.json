@@ -9,7 +9,7 @@
   "require": {
     "hhvm/hsl": "^3.26",
     "hhvm/type-assert": "^3.2",
-    "hhvm/hsl-experimental": "^3.29"
+    "hhvm/hsl-experimental": "^3.29.5"
   },
   "require-dev": {
     "hhvm/hhast": "^3.29.1",
