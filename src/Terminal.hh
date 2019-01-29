@@ -63,6 +63,16 @@ final class Terminal implements ITerminal {
       return true;
     }
 
+    if (\getenv('TERM') === 'xterm') {
+      $cache = true;
+      return true;
+    }
+
+    if (\getenv('TERM_PROGRAM') === 'Hyper') {
+      $cache = true;
+      return true;
+    }
+
     if ($this->isInteractive()) {
       $cache = Str\contains((string)\getenv('TERM'), 'color');
       return $cache;
