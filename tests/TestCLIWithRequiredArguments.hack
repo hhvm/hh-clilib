@@ -1,4 +1,3 @@
-<?hh // strict
 /*
  *  Copyright (c) 2017-present, Facebook, Inc.
  *  All rights reserved.
@@ -10,8 +9,12 @@
 
 namespace Facebook\CLILib;
 
-class TestCLIWithOptionalArguments extends CLIWithArguments {
+class TestCLIWithRequiredArguments extends CLIWithRequiredArguments {
   use TestCLITrait;
+
+  public static function getHelpTextForRequiredArguments(): vec<string> {
+    return vec['MY HELP TEXT'];
+  }
 
   public function getArgumentsForTesting(): vec<string> {
     return $this->getArguments();

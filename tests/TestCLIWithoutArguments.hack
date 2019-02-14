@@ -1,4 +1,3 @@
-<?hh // strict
 /*
  *  Copyright (c) 2017-present, Facebook, Inc.
  *  All rights reserved.
@@ -8,7 +7,8 @@
  *
  */
 
-namespace Facebook\CLILib\CLIOptions;
+namespace Facebook\CLILib;
 
-/* HH_IGNORE_ERROR[2053]: using implementation detail here to avoid elsewhere */
-type enumname<T> = classname<\HH\BuiltinEnum<T>>;
+class TestCLIWithoutArguments extends CLIBase {
+  use TestCLITrait;
+}
