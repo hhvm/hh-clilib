@@ -275,16 +275,16 @@
         },
         {
             "name": "hhvm/hhvm-autoload",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhvm-autoload.git",
-                "reference": "dbd50d7fb1856d1f6757e10bc30eb2bf5d17b3f1"
+                "reference": "4f510960e71adcad661c33ae355d0d9670d9c805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/dbd50d7fb1856d1f6757e10bc30eb2bf5d17b3f1",
-                "reference": "dbd50d7fb1856d1f6757e10bc30eb2bf5d17b3f1",
+                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/4f510960e71adcad661c33ae355d0d9670d9c805",
+                "reference": "4f510960e71adcad661c33ae355d0d9670d9c805",
                 "shasum": ""
             },
             "require": {
@@ -318,7 +318,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-03-22T21:27:20+00:00"
+            "time": "2019-03-26T17:57:44+00:00"
         }
     ],
     "aliases": [],

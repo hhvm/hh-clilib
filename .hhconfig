@@ -6,3 +6,4 @@ disallow_destruct = true
 user_attributes=
 # circular dependency with HHAST
 ignored_paths=["vendor\/hhvm\/hhast\/.+"]
+disable_static_local_variables = true
