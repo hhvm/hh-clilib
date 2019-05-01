@@ -113,7 +113,7 @@ abstract class CLIBase implements ITerminal {
    */
   final protected function getArguments(): vec<string> {
     invariant(
-      ($_ = $this) instanceof CLIWithArguments,
+      $this instanceof CLIWithArguments,
       "Calling getArguments(), but don't accept arguments",
     );
     return $this->arguments;
@@ -279,7 +279,7 @@ abstract class CLIBase implements ITerminal {
       return;
     }
 
-    if (($_ = $this) instanceof CLIWithArguments) {
+    if ($this instanceof CLIWithArguments) {
       $this->arguments = $arguments;
       return;
     }
