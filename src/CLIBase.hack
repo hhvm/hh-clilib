@@ -113,7 +113,7 @@ abstract class CLIBase implements ITerminal {
    */
   final protected function getArguments(): vec<string> {
     invariant(
-      ($_ = $this) instanceof CLIWithArguments,
+      ($_ = $this) is CLIWithArguments,
       "Calling getArguments(), but don't accept arguments",
     );
     return $this->arguments;
@@ -266,7 +266,7 @@ abstract class CLIBase implements ITerminal {
     $arguments = Vec\concat($arguments, $argv);
 
     if (C\is_empty($arguments)) {
-      if ($this instanceof CLIWithRequiredArguments) {
+      if ($this is CLIWithRequiredArguments) {
         $class = TypeAssert\classname_of(
           CLIWithRequiredArguments::class,
           static::class,
@@ -279,7 +279,7 @@ abstract class CLIBase implements ITerminal {
       return;
     }
 
-    if (($_ = $this) instanceof CLIWithArguments) {
+    if (($_ = $this) is CLIWithArguments) {
       $this->arguments = $arguments;
       return;
     }
@@ -351,7 +351,7 @@ abstract class CLIBase implements ITerminal {
     } else {
       $usage .= ' [OPTIONS]';
     }
-    if ($this instanceof CLIWithRequiredArguments) {
+    if ($this is CLIWithRequiredArguments) {
       $class =
         TypeAssert\classname_of(CLIWithRequiredArguments::class, static::class);
       $usage .= ' '.
@@ -359,7 +359,7 @@ abstract class CLIBase implements ITerminal {
         ' ['.
         $class::getHelpTextForOptionalArguments().
         ' ...]';
-    } else if ($this instanceof CLIWithArguments) {
+    } else if ($this is CLIWithArguments) {
       $class = TypeAssert\classname_of(CLIWithArguments::class, static::class);
       $usage .= ' ['.$class::getHelpTextForOptionalArguments().' ...]';
     }
@@ -373,7 +373,7 @@ abstract class CLIBase implements ITerminal {
     foreach ($opts as $opt) {
       $short = $opt->getShort();
       $long = $opt->getLong();
-      if ($opt instanceof CLIOptions\CLIOptionWithRequiredValue) {
+      if ($opt is CLIOptions\CLIOptionWithRequiredValue) {
         $long .= '=VALUE';
         if ($short !== null) {
           $short .= ' VALUE';
