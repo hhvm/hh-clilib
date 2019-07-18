@@ -3,3 +3,4 @@ vendor/
 *.swo
 composer.lock
 .DS_Store
+.*.hhast.*cache
