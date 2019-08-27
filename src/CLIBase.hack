@@ -210,8 +210,6 @@ abstract class CLIBase implements ITerminal {
     // Ignore process name in $argv[0]
     $argv = Vec\drop($argv, 1);
 
-    $not_options = vec[];
-
     $options = $this->getSupportedOptions();
 
     $long_options =
