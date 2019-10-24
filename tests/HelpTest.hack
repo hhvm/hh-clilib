@@ -26,10 +26,10 @@ final class HelpTest extends TestCase {
 
     expect($stderr->getBuffer())->toBeSame('');
     $buff = $stdout->getBuffer();
-    expect($buff)->toContain('--flag1');
-    expect($buff)->toContain('-1');
-    expect($buff)->toContain('Help text');
-    expect($buff)->toContain('--flag2');
+    expect($buff)->toContainSubstring('--flag1');
+    expect($buff)->toContainSubstring('-1');
+    expect($buff)->toContainSubstring('Help text');
+    expect($buff)->toContainSubstring('--flag2');
   }
 
   public function testAfterOptions(): void {
@@ -43,6 +43,6 @@ final class HelpTest extends TestCase {
         $terminal,
       ),
     )->toThrow(ExitException::class);
-    expect($stdout->getBuffer())->toContain('--flag2');
+    expect($stdout->getBuffer())->toContainSubstring('--flag2');
   }
 }
