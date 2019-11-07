@@ -22,7 +22,10 @@ final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
     return Str\length($data);
   }
 
-  public async function writeAsync(string $data): Awaitable<void> {
+  public async function writeAsync(
+    string $data,
+    ?float $_timeout_seconds = null,
+  ): Awaitable<void> {
     $this->buffer .= $data;
   }
 
@@ -42,7 +45,7 @@ final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
     return $this->buffer;
   }
 
-  public function clearBuffer(): void{
+  public function clearBuffer(): void {
     $this->buffer = '';
   }
 }
