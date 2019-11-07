@@ -172,7 +172,7 @@ abstract class CLIBase implements ITerminal {
   final public static async function runAsync(): Awaitable<int> {
     $in = IO\request_input();
     $out = IO\request_output();
-    $err = IO\request_error();
+    $err = IO\request_error() ?? $out;
     try {
       $responder = new static(
         vec(/* HH_IGNORE_ERROR[2050] */ $GLOBALS['argv']),
