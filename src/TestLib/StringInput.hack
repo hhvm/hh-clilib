@@ -38,7 +38,10 @@ final class StringInput implements IO\ReadHandle, IO\UserspaceHandle {
     return $this->buffer;
   }
 
-  public async function readAsync(?int $max_bytes = null): Awaitable<string> {
+  public async function readAsync(
+    ?int $max_bytes = null,
+    ?float $_timeout_seconds = null,
+  ): Awaitable<string> {
     invariant(
       $max_bytes === null || $max_bytes >= 0,
       '$max_bytes must be null or non-negative',
@@ -70,7 +73,10 @@ final class StringInput implements IO\ReadHandle, IO\UserspaceHandle {
     return $ret;
   }
 
-  public async function readLineAsync(?int $max_bytes = null): Awaitable<string> {
+  public async function readLineAsync(
+    ?int $max_bytes = null,
+    ?float $_timeout_seconds = null,
+  ): Awaitable<string> {
     invariant(
       $max_bytes === null || $max_bytes >= 0,
       '$max_bytes must be null or non-negative',
