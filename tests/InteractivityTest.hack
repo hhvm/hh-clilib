@@ -47,15 +47,15 @@ final class InteractivityTest extends TestCase {
 
   public async function testSingleCommandAfterStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    list($ret, $_) = await Tuple\from_async(
-      $cli->mainAsync(),
-      async {
+    concurrent {
+      $ret = await $cli->mainAsync();
+      await async {
         await \HH\Asio\later();
         expect($out->getBuffer())->toBeSame('> ');
         $out->clearBuffer();
         $in->appendToBuffer("exit 123\n");
-      },
-    );
+      };
+    }
     expect($ret)->toBeSame(123);
     expect($out->getBuffer())->toBeSame('');
   }
@@ -74,9 +74,9 @@ final class InteractivityTest extends TestCase {
 
   public async function testMultipleCommandsSequentially(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    list($ret, $_) = await Tuple\from_async(
-      $cli->mainAsync(),
-      async {
+    concurrent {
+      $ret = await $cli->mainAsync();
+      await async {
         await \HH\Asio\later();
         expect($out->getBuffer())->toBeSame('> ');
         $out->clearBuffer();
@@ -93,8 +93,8 @@ final class InteractivityTest extends TestCase {
 
         $out->clearBuffer();
         $in->appendToBuffer("exit 42\n");
-      },
-    );
+      };
+    }
     expect($ret)->toBeSame(42);
     expect($out->getBuffer())->toBeSame('');
     expect($err->getBuffer())->toBeSame('');
