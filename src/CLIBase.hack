@@ -11,7 +11,7 @@ namespace Facebook\CLILib;
 
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Str, Vec};
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 /**
  * This class contains all of the core functionality for using the Hack CLI

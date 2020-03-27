@@ -10,7 +10,7 @@
 namespace Facebook\CLILib\TestLib;
 
 use namespace HH\Lib\{Math, Str};
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 /** This class exposes a string as if it were STDIN.
  *

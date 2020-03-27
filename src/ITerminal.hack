@@ -8,7 +8,7 @@
  */
 
 namespace Facebook\CLILib;
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 /** Interface encapsulating the terminal.
  *

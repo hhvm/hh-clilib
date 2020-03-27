@@ -10,7 +10,7 @@
 namespace Facebook\CLILib;
 
 use namespace HH\Lib\Str;
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 /**
  * Default implementation of an `ITerminal`.

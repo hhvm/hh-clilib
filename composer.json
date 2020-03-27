@@ -7,10 +7,10 @@
     }
   },
   "require": {
-    "hhvm": "^4.13",
+    "hhvm": "^4.41",
     "hhvm/hsl": "^4.0",
     "hhvm/type-assert": "^3.2",
-    "hhvm/hsl-experimental": "^4.0"
+    "hhvm/hsl-experimental": "^4.50"
   },
   "require-dev": {
     "hhvm/hhast": "^4.0.2",
