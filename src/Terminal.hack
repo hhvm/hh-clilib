@@ -9,8 +9,7 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Str;
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{IO, Str};
 
 /**
  * Default implementation of an `ITerminal`.
@@ -84,6 +83,7 @@ final class Terminal implements ITerminal {
       if ($noninteractive === '0' || $noninteractive === 'false') {
         return true;
       }
+      /* HHAST_IGNORE_ERROR[DontUseAsioJoin] */
       \HH\Asio\join($this->stderr->writeAsync(
         "NONINTERACTIVE env var must be 0/1/yes/no/true/false, or unset.\n",
       ));

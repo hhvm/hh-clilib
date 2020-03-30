@@ -64,7 +64,7 @@ final class CLIOptionFlag extends CLIOption {
     if ($value !== null) {
       throw new InvalidArgumentException(
         "'%s' specifies a value, however values aren't supported for that ".
-        "option",
+        'option',
         $as_given,
       );
     }

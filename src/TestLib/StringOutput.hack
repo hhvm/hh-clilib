@@ -10,8 +10,7 @@
 namespace Facebook\CLILib\TestLib;
 
 
-use namespace HH\Lib\Str;
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{IO, Str};
 
 /** This class stores all CLI output in a string */
 final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {

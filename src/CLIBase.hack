@@ -10,8 +10,7 @@
 namespace Facebook\CLILib;
 
 use namespace Facebook\TypeAssert;
-use namespace HH\Lib\{C, Dict, Str, Vec};
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{C, Dict, IO, Str, Vec};
 
 /**
  * This class contains all of the core functionality for using the Hack CLI
@@ -146,6 +145,7 @@ abstract class CLIBase implements ITerminal {
 
   <<__Deprecated('use runAsync instead')>>
   final public static function main(): noreturn {
+    /* HHAST_IGNORE_ERROR[DontUseAsioJoin] */
     $result = \HH\Asio\join(static::runAsync());
     exit($result);
   }
@@ -229,6 +229,7 @@ abstract class CLIBase implements ITerminal {
       $arg = C\firstx($argv);
       $argv = Vec\drop($argv, 1);
       if ($arg === '--help' || $arg === '-h') {
+        /* HHAST_IGNORE_ERROR[DontUseAsioJoin] */
         \HH\Asio\join($this->displayHelpAsync($terminal->getStdout()));
         throw new ExitException(0);
       }
@@ -254,7 +255,7 @@ abstract class CLIBase implements ITerminal {
 
       foreach ($options as $option => $value) {
         if (!C\contains_key($available_options, $option)) {
-          throw new InvalidArgumentException("Unrecognized option: %s", $arg);
+          throw new InvalidArgumentException('Unrecognized option: %s', $arg);
         } else {
           $argv = $available_options[$option]->apply($option, $value, $argv);
         }
@@ -270,7 +271,7 @@ abstract class CLIBase implements ITerminal {
           static::class,
         );
         throw new InvalidArgumentException(
-          "%s must be specified.",
+          '%s must be specified.',
           Str\join($class::getHelpTextForRequiredArguments(), ' '),
         );
       }
@@ -301,7 +302,7 @@ abstract class CLIBase implements ITerminal {
         $equal_sign_position = Str\search($arg, '=', 0);
         if ($equal_sign_position !== null && $equal_sign_position !== 1) {
           throw new InvalidArgumentException(
-            "It is restricted to use value assignment in multiple usage of short syntax: -%s",
+            'It is restricted to use value assignment in multiple usage of short syntax: -%s',
             $arg,
           );
         }
@@ -401,6 +402,7 @@ abstract class CLIBase implements ITerminal {
    * DEPRECATED: use `displayHelpAsync` instead.
    */
   final public function displayHelp(IO\WriteHandle $out): void {
+    /* HHAST_IGNORE_ERROR[DontUseAsioJoin] */
     \HH\Asio\join($this->displayHelpAsync($out));
   }
 }
