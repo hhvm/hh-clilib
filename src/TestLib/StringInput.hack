@@ -39,7 +39,8 @@ final class StringInput implements IO\ReadHandle, IO\UserspaceHandle {
 
   public async function readAsync(
     ?int $max_bytes = null,
-    ?float $_timeout_seconds = null,
+    // seconds_or_ns to support hsl-experimental <= 4.50.1 as well as newer
+    ?num $_timeout_seconds_or_ns = null,
   ): Awaitable<string> {
     invariant(
       $max_bytes === null || $max_bytes >= 0,
@@ -57,7 +58,12 @@ final class StringInput implements IO\ReadHandle, IO\UserspaceHandle {
     return Str\slice($buf, 0, $max_bytes);
   }
 
+  // read() alias for hsl-experimental <= 4.50.1
   public function rawReadBlocking(?int $max_bytes = null): string {
+    return $this->read($max_bytes);
+  }
+
+  public function read(?int $max_bytes = null): string {
     if ($max_bytes === null) {
       $max_bytes = Str\length($this->buffer);
     }

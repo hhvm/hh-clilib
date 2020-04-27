@@ -65,7 +65,9 @@ trait TestCLITrait {
   }
 
   private async function replAsync(): Awaitable<int> {
-    $in = $this->getStdin();
+    // TODO: Replace with a buffered line reader when new hsl-experimental is
+    // released.
+    $in = $this->getStdin() as TestLib\StringInput;
     $out = $this->getStdout();
     $err = $this->getStderr();
     while (!$in->isEndOfFile()) {
