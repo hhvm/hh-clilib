@@ -27,7 +27,7 @@ final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
 
   public async function writeAsync(
     string $data,
-    ?float $_timeout_seconds = null,
+    ?num $_timeout_mixed = null,
   ): Awaitable<void> {
     $this->buffer .= $data;
   }
