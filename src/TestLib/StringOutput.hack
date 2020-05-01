@@ -17,6 +17,10 @@ final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
   private string $buffer = '';
 
   public function rawWriteBlocking(string $data): int {
+    return $this->write($data);
+  }
+
+  public function write(string $data): int {
     $this->buffer .= $data;
     return Str\length($data);
   }
