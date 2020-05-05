@@ -28,8 +28,8 @@ final class StringOutput implements IO\WriteHandle, IO\UserspaceHandle {
   public async function writeAsync(
     string $data,
     ?num $_timeout_mixed = null,
-  ): Awaitable<int> {
-    return $this->write($data);
+  ): Awaitable<void> {
+    $this->write($data);
   }
 
   public function isEndOfFile(): bool {
