@@ -15,5 +15,5 @@ hh_client
 
 vendor/bin/hacktest tests/
 if !(hhvm --version | grep -q -- -dev); then
-  vendor/bin/hhast-lint
+# TEMPORARY: circular dependency for HSL-IO v0.2 upgrade  vendor/bin/hhast-lint
 fi
