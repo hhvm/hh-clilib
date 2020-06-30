@@ -68,8 +68,8 @@ trait TestCLITrait {
     $in = $this->getStdin();
     $out = $this->getStdout();
     $err = $this->getStderr();
+    await $out->writeAsync('> ');
     foreach((new IO\BufferedReader($in))->linesIterator() await as $line) {
-      await $out->writeAsync('> ');
       $sep = Str\search($line, ' ');
       if ($sep === null) {
         await $err->writeAsync("Usage: (exit <code>|echo foo bar ....\n");
@@ -92,6 +92,7 @@ trait TestCLITrait {
           await $err->writeAsync("Invalid command\n");
           return 1;
       }
+      await $out->writeAsync('> ');
     }
     return 0;
   }
