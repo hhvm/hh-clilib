@@ -9,13 +9,13 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{IO, Vec};
 use function Facebook\FBExpect\expect;
 
 final class OptionParsingTest extends TestCase {
   private static function cli(
     string ...$argv
-  ): (TestCLIWithoutArguments, TestLib\StringOutput, TestLib\StringOutput) {
+  ): (TestCLIWithoutArguments, IO\MemoryHandle, IO\MemoryHandle) {
     return self::makeCLI(TestCLIWithoutArguments::class, ...$argv);
   }
 

@@ -9,19 +9,19 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{IO, Vec};
 use function Facebook\FBExpect\expect;
 
 abstract class TestCase extends \Facebook\HackTest\HackTest {
   protected static function makeCLI<T as CLIBase>(
     classname<T> $cli, 
     string ...$argv
-  ): (T, TestLib\StringOutput, TestLib\StringOutput) {
+  ): (T, IO\MemoryHandle, IO\MemoryHandle) {
     // $argv[0] is the executable
     $args = Vec\concat(vec[__FILE__], $argv);
-    $stdin = new TestLib\StringInput();
-    $stdout = new TestLib\StringOutput();
-    $stderr = new TestLib\StringOutput();
+    $stdin = new IO\MemoryHandle();
+    $stdout = new IO\MemoryHandle();
+    $stderr = new IO\MemoryHandle();
     $terminal = new Terminal($stdin, $stdout, $stderr);
     return tuple(
       new $cli($args, $terminal),

@@ -9,15 +9,15 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Vec;
+use namespace HH\Lib\{IO, Vec};
 use function Facebook\FBExpect\expect;
 
 final class HelpTest extends TestCase {
 
   public function testStandalone(): void {
-    $stdin = new TestLib\StringInput();
-    $stdout = new TestLib\StringOutput();
-    $stderr = new TestLib\StringOutput();
+    $stdin = new IO\MemoryHandle();
+    $stdout = new IO\MemoryHandle();
+    $stderr = new IO\MemoryHandle();
     $terminal = new Terminal($stdin, $stdout, $stderr);
     expect(
       () ==>
@@ -33,9 +33,9 @@ final class HelpTest extends TestCase {
   }
 
   public function testAfterOptions(): void {
-    $stdin = new TestLib\StringInput();
-    $stdout = new TestLib\StringOutput();
-    $stderr = new TestLib\StringOutput();
+    $stdin = new IO\MemoryHandle();
+    $stdout = new IO\MemoryHandle();
+    $stderr = new IO\MemoryHandle();
     $terminal = new Terminal($stdin, $stdout, $stderr);
     expect(
       () ==> new TestCLIWithoutArguments(

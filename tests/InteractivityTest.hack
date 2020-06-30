@@ -9,16 +9,15 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\{Tuple, Vec};
+use namespace HH\Lib\{IO, Tuple, Vec};
 use function Facebook\FBExpect\expect;
-use type Facebook\CLILib\TestLib\{StringInput, StringOutput};
 
 final class InteractivityTest extends TestCase {
   private function getCLI(
-  ): (TestCLIWithoutArguments, StringInput, StringOutput, StringOutput) {
-    $stdin = new StringInput();
-    $stdout = new StringOutput();
-    $stderr = new StringOutput();
+  ): (TestCLIWithoutArguments, IO\MemoryHandle, IO\MemoryHandle, IO\MemoryHandle) {
+    $stdin = new IO\MemoryHandle();
+    $stdout = new IO\MemoryHandle();
+    $stderr = new IO\MemoryHandle();
     $cli = new TestCLIWithoutArguments(
       vec[__FILE__, '--interactive'],
       new Terminal($stdin, $stdout, $stderr),
@@ -28,7 +27,7 @@ final class InteractivityTest extends TestCase {
 
   public async function testClosedInput(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
-    await $in->closeAsync();
+    $in->close();
     $ret = await $cli->mainAsync();
     expect($ret)->toBeSame(0);
     expect($out->getBuffer())->toBeSame('');
@@ -38,7 +37,7 @@ final class InteractivityTest extends TestCase {
   public async function testSingleCommandBeforeStart(): Awaitable<void> {
     list($cli, $in, $out, $err) = $this->getCLI();
     $in->appendToBuffer("echo hello, world\n");
-    await $in->closeAsync();
+    $in->close();
     $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n");
@@ -52,7 +51,7 @@ final class InteractivityTest extends TestCase {
       await async {
         await \HH\Asio\later();
         expect($out->getBuffer())->toBeSame('> ');
-        $out->clearBuffer();
+        $out->reset();
         $in->appendToBuffer("exit 123\n");
       };
     }
@@ -65,7 +64,7 @@ final class InteractivityTest extends TestCase {
     $in->appendToBuffer("echo hello, world\n");
     $in->appendToBuffer("echo foo bar\n");
     $in->appendToBuffer("exit 123\n");
-    await $in->closeAsync();
+    $in->close();
     $ret = await $cli->mainAsync();
     expect($err->getBuffer())->toBeSame('');
     expect($out->getBuffer())->toBeSame("> hello, world\n> foo bar\n> ");
@@ -79,19 +78,19 @@ final class InteractivityTest extends TestCase {
       await async {
         await \HH\Asio\later();
         expect($out->getBuffer())->toBeSame('> ');
-        $out->clearBuffer();
+        $out->reset();
 
         $in->appendToBuffer("echo foo bar\n");
         await \HH\Asio\later();
 
         expect($out->getBuffer())->toBeSame("foo bar\n> ");
-        $out->clearBuffer();
+        $out->reset();
 
         $in->appendToBuffer("echo herp derp\n");
         await \HH\Asio\later();
         expect($out->getBuffer())->toBeSame("herp derp\n> ");
 
-        $out->clearBuffer();
+        $out->reset();
         $in->appendToBuffer("exit 42\n");
       };
     }

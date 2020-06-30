@@ -9,7 +9,7 @@
 
 namespace Facebook\CLILib;
 
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{IO, OS, Str};
 
 trait TestCLITrait {
   require extends CLIBase;
@@ -65,15 +65,11 @@ trait TestCLITrait {
   }
 
   private async function replAsync(): Awaitable<int> {
-    // TODO: Replace with a buffered line reader when new hsl-experimental is
-    // released.
-    $in = $this->getStdin() as TestLib\StringInput;
+    $in = $this->getStdin();
     $out = $this->getStdout();
     $err = $this->getStderr();
-    while (!$in->isEndOfFile()) {
+    foreach((new IO\BufferedReader($in))->linesIterator() await as $line) {
       await $out->writeAsync('> ');
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop */
-      $line = await $in->readLineAsync();
       $sep = Str\search($line, ' ');
       if ($sep === null) {
         await $err->writeAsync("Usage: (exit <code>|echo foo bar ....\n");
