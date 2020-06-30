@@ -50,14 +50,12 @@ final class InteractivityTest extends TestCase {
       vec[__FILE__, '--interactive'],
       new Terminal($in_r, $out, $err),
     );
-    concurrent {
-      $ret = await $cli->mainAsync();
-      await async {
-        await $in->writeAllAsync("echo hello, world\n");
-        $in->close();
-      };
-    }
+
+    await $in->writeAllAsync("echo hello, world\n");
+    $in->close();
+    $ret = await $cli->mainAsync();
     $in_r->close();
+
     expect($err->getBuffer())->toEqual('');
     expect($out->getBuffer())->toEqual("> hello, world\n> ");
     expect($ret)->toEqual(0);
@@ -65,25 +63,25 @@ final class InteractivityTest extends TestCase {
 
   public async function testSingleCommandAfterStart(): Awaitable<void> {
     list($in_r, $in) = IO\pipe();
-    $out = new IO\MemoryHandle();
+    list($out, $out_w) = IO\pipe();
     $err = new IO\MemoryHandle();
     $cli = new TestCLIWithoutArguments(
       vec[__FILE__, '--interactive'],
-      new Terminal($in_r, $out, $err),
+      new Terminal($in_r, $out_w, $err),
     );
     concurrent {
       $ret = await $cli->mainAsync();
       await async {
-        await \HH\Asio\later();
-        expect($out->getBuffer())->toBeSame('> ');
-        $out->reset();
+        expect(await $out->readAsync())->toEqual('> ');
         await $in->writeAllAsync("exit 123\n");
         $in->close();
       };
     }
     $in_r->close();
+    $out_w->close();
     expect($ret)->toBeSame(123);
-    expect($out->getBuffer())->toBeSame('');
+    expect(await $out->readAllAsync())->toBeSame('');
+    $out->close();
   }
 
   public async function testMultipleCommandBeforeStart(): Awaitable<void> {
