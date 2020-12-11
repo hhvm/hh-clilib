@@ -184,14 +184,14 @@ abstract class CLIBase implements ITerminal {
       $message = $e->getUserMessage();
       if ($message !== null) {
         if ($code === 0) {
-          await $out->writeAsync($message."\n");
+          await $out->writeAllAsync($message."\n");
         } else {
-          await $err->writeAsync($message."\n");
+          await $err->writeAllAsync($message."\n");
         }
       }
       return $code;
     } catch (CLIException $e) {
-      await $err->writeAsync($e->getMessage()."\n");
+      await $err->writeAllAsync($e->getMessage()."\n");
       return 1;
     }
   }
@@ -363,12 +363,12 @@ abstract class CLIBase implements ITerminal {
       $usage .= ' ['.$class::getHelpTextForOptionalArguments().' ...]';
     }
 
-    await $out->writeAsync($usage."\n");
+    await $out->writeAllAsync($usage."\n");
     if (C\is_empty($opts)) {
       return;
     }
 
-    await $out->writeAsync("\nOptions:\n");
+    await $out->writeAllAsync("\nOptions:\n");
     foreach ($opts as $opt) {
       $short = $opt->getShort();
       $long = $opt->getLong();
@@ -381,21 +381,21 @@ abstract class CLIBase implements ITerminal {
 
       if ($short !== null) {
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-        await $out->writeAsync(Str\format("  -%s, --%s\n", $short, $long));
+        await $out->writeAllAsync(Str\format("  -%s, --%s\n", $short, $long));
       } else {
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-        await $out->writeAsync(Str\format("  --%s\n", $long));
+        await $out->writeAllAsync(Str\format("  --%s\n", $long));
       }
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $out->writeAsync(
+      await $out->writeAllAsync(
         $opt->getHelpText()
           |> Str\split($$, "\n")
           |> Vec\map($$, $line ==> "\t".$line."\n")
           |> \implode('', $$),
       );
     }
-    await $out->writeAsync("  -h, --help\n");
-    await $out->writeAsync("\tdisplay this text and exit\n");
+    await $out->writeAllAsync("  -h, --help\n");
+    await $out->writeAllAsync("\tdisplay this text and exit\n");
   }
 
   /**

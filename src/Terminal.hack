@@ -84,7 +84,7 @@ final class Terminal implements ITerminal {
         return true;
       }
       /* HHAST_IGNORE_ERROR[DontUseAsioJoin] */
-      \HH\Asio\join($this->stderr->writeAsync(
+      \HH\Asio\join($this->stderr->writeAllAsync(
         "NONINTERACTIVE env var must be 0/1/yes/no/true/false, or unset.\n",
       ));
     }

@@ -68,31 +68,31 @@ trait TestCLITrait {
     $in = $this->getStdin();
     $out = $this->getStdout();
     $err = $this->getStderr();
-    await $out->writeAsync('> ');
+    await $out->writeAllAsync('> ');
     foreach((new IO\BufferedReader($in))->linesIterator() await as $line) {
       $sep = Str\search($line, ' ');
       if ($sep === null) {
-        await $err->writeAsync("Usage: (exit <code>|echo foo bar ....\n");
+        await $err->writeAllAsync("Usage: (exit <code>|echo foo bar ....\n");
         return 1;
       }
       $command = Str\slice($line, 0, $sep);
       $args = Str\slice($line, $sep + 1) |> Str\strip_suffix($$, "\n");
       switch ($command) {
         case 'echo':
-          await $out->writeAsync($args."\n");
+          await $out->writeAllAsync($args."\n");
           break;
         case 'exit':
           $code = Str\to_int($args);
           if ($code === null) {
-            await $err->writeAsync("Exit code must be numeric.\n");
+            await $err->writeAllAsync("Exit code must be numeric.\n");
             return 1;
           }
           return $code;
         default:
-          await $err->writeAsync("Invalid command\n");
+          await $err->writeAllAsync("Invalid command\n");
           return 1;
       }
-      await $out->writeAsync('> ');
+      await $out->writeAllAsync('> ');
     }
     return 0;
   }
@@ -102,7 +102,7 @@ trait TestCLITrait {
       return await $this->replAsync();
     }
     await $this->getStdout()
-      ->writeAsync(
+      ->writeAllAsync(
         \json_encode(
           dict[
             'string' => $this->stringValue,
