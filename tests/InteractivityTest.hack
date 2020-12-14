@@ -72,7 +72,7 @@ final class InteractivityTest extends TestCase {
     concurrent {
       $ret = await $cli->mainAsync();
       await async {
-        expect(await $out->readAsync())->toEqual('> ');
+        expect(await $out->readAllowPartialSuccessAsync())->toEqual('> ');
         await $in->writeAllAsync("exit 123\n");
         $in->close();
       };
