@@ -9,7 +9,6 @@
 
 namespace Facebook\CLILib\CLIOptions;
 
-
 /**
  * Creates a CLI option that requrires an associated string value.
  *
