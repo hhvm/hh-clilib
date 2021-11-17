@@ -24,3 +24,5 @@ jobs:
       - uses: hhvm/actions/hack-lint-test@master
         with:
           hhvm: ${{matrix.hhvm}}
+        env:
+          COMPOSER_ROOT_VERSION: dev-${{github.base_ref || github.ref_name}}
