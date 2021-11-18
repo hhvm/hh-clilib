@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/hhvm/hh-clilib.svg?branch=master)](https://travis-ci.org/hhvm/hh-clilib)
-
 # Hack CLI Library
+
+[![Continuous Integration](https://github.com/hhvm/hh-clilib/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/hhvm/hh-clilib/actions/workflows/build-and-test.yml)
 
 This library provides basic command-line handling, including:
 - parsing of `ARGV`
