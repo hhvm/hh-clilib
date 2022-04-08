@@ -8,11 +8,8 @@
     }
   },
   "require": {
-    "hhvm": "^4.102",
-    "hhvm/hsl": "^4.0",
-    "hhvm/type-assert": "^4.0",
-    "hhvm/hsl-experimental": "^4.58.0rc1",
-    "hhvm/hsl-io": "^0.3.0"
+    "hhvm": "^4.128",
+    "hhvm/type-assert": "^4.0"
   },
   "require-dev": {
     "facebook/fbexpect": "^2.6.1",
