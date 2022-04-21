@@ -16,5 +16,10 @@
     "hhvm/hhvm-autoload": "^3.1.0",
     "hhvm/hacktest": "^2.2.0rc1",
     "hhvm/hhast": "^4.88.1"
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
   }
 }
