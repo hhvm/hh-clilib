@@ -28,7 +28,7 @@ use type Facebook\CLILib\CLIBase;
 final class MyCLI extends CLIBase {
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
-    $this->getStdout()->write("Hello, world!');
+    $this->getStdout()->write("Hello, world!");
     return 0;
   }
 }
